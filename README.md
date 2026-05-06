@@ -11,13 +11,13 @@ It is generated with [Stainless](https://www.stainless.com/).
 
 ## Documentation
 
-The full API of this library can be found in [api.md](api.md).
+The REST API documentation can be found on [docs.crosmos.dev](https://docs.crosmos.dev). The full API of this library can be found in [api.md](api.md).
 
 ## Installation
 
 ```sh
 # install from the production repo
-pip install git+ssh://git@github.com/crosmos-app/python-sdk.git
+pip install git+ssh://git@github.com/crosmos-app/crosmos-python-sdk.git
 ```
 
 > [!NOTE]
@@ -35,10 +35,11 @@ client = Crosmos(
     api_key=os.environ.get("CROSMOS_API_KEY"),  # This is the default and can be omitted
 )
 
-response = client.api.v1.auth.refresh(
-    refresh_token="refresh_token",
+search = client.api.v1.search.perform(
+    query="What is my primary language?",
+    space_id=0,
 )
-print(response.user_id)
+print(search.candidates)
 ```
 
 While you can provide an `api_key` keyword argument,
@@ -61,10 +62,11 @@ client = AsyncCrosmos(
 
 
 async def main() -> None:
-    response = await client.api.v1.auth.refresh(
-        refresh_token="refresh_token",
+    search = await client.api.v1.search.perform(
+        query="What is my primary language?",
+        space_id=0,
     )
-    print(response.user_id)
+    print(search.candidates)
 
 
 asyncio.run(main())
@@ -80,7 +82,7 @@ You can enable this by installing `aiohttp`:
 
 ```sh
 # install from the production repo
-pip install 'crosmos[aiohttp] @ git+ssh://git@github.com/crosmos-app/python-sdk.git'
+pip install 'crosmos[aiohttp] @ git+ssh://git@github.com/crosmos-app/crosmos-python-sdk.git'
 ```
 
 Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
@@ -97,10 +99,11 @@ async def main() -> None:
         api_key=os.environ.get("CROSMOS_API_KEY"),  # This is the default and can be omitted
         http_client=DefaultAioHttpClient(),
     ) as client:
-        response = await client.api.v1.auth.refresh(
-            refresh_token="refresh_token",
+        search = await client.api.v1.search.perform(
+            query="What is my primary language?",
+            space_id=0,
         )
-        print(response.user_id)
+        print(search.candidates)
 
 
 asyncio.run(main())
@@ -154,8 +157,9 @@ from crosmos import Crosmos
 client = Crosmos()
 
 try:
-    client.api.v1.auth.refresh(
-        refresh_token="refresh_token",
+    client.api.v1.search.perform(
+        query="What is my primary language?",
+        space_id=0,
     )
 except crosmos.APIConnectionError as e:
     print("The server could not be reached")
@@ -199,8 +203,9 @@ client = Crosmos(
 )
 
 # Or, configure per-request:
-client.with_options(max_retries=5).api.v1.auth.refresh(
-    refresh_token="refresh_token",
+client.with_options(max_retries=5).api.v1.search.perform(
+    query="What is my primary language?",
+    space_id=0,
 )
 ```
 
@@ -224,8 +229,9 @@ client = Crosmos(
 )
 
 # Override per-request:
-client.with_options(timeout=5.0).api.v1.auth.refresh(
-    refresh_token="refresh_token",
+client.with_options(timeout=5.0).api.v1.search.perform(
+    query="What is my primary language?",
+    space_id=0,
 )
 ```
 
@@ -267,18 +273,19 @@ The "raw" Response object can be accessed by prefixing `.with_raw_response.` to 
 from crosmos import Crosmos
 
 client = Crosmos()
-response = client.api.v1.auth.with_raw_response.refresh(
-    refresh_token="refresh_token",
+response = client.api.v1.search.with_raw_response.perform(
+    query="What is my primary language?",
+    space_id=0,
 )
 print(response.headers.get('X-My-Header'))
 
-auth = response.parse()  # get the object that `api.v1.auth.refresh()` would have returned
-print(auth.user_id)
+search = response.parse()  # get the object that `api.v1.search.perform()` would have returned
+print(search.candidates)
 ```
 
-These methods return an [`APIResponse`](https://github.com/crosmos-app/python-sdk/tree/main/src/crosmos/_response.py) object.
+These methods return an [`APIResponse`](https://github.com/crosmos-app/crosmos-python-sdk/tree/main/src/crosmos/_response.py) object.
 
-The async client returns an [`AsyncAPIResponse`](https://github.com/crosmos-app/python-sdk/tree/main/src/crosmos/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
+The async client returns an [`AsyncAPIResponse`](https://github.com/crosmos-app/crosmos-python-sdk/tree/main/src/crosmos/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
 
 #### `.with_streaming_response`
 
@@ -287,8 +294,9 @@ The above interface eagerly reads the full response body when you make the reque
 To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
 
 ```python
-with client.api.v1.auth.with_streaming_response.refresh(
-    refresh_token="refresh_token",
+with client.api.v1.search.with_streaming_response.perform(
+    query="What is my primary language?",
+    space_id=0,
 ) as response:
     print(response.headers.get("X-My-Header"))
 
@@ -384,7 +392,7 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/crosmos-app/python-sdk/issues) with questions, bugs, or suggestions.
+We are keen for your feedback; please open an [issue](https://www.github.com/crosmos-app/crosmos-python-sdk/issues) with questions, bugs, or suggestions.
 
 ### Determining the installed version
 

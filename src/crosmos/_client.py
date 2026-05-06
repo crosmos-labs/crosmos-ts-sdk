@@ -36,11 +36,9 @@ from ._base_client import (
 )
 
 if TYPE_CHECKING:
-    from .resources import api, oauth, health, well_known
-    from .resources.oauth import OAuthResource, AsyncOAuthResource
+    from .resources import api, health
     from .resources.health import HealthResource, AsyncHealthResource
     from .resources.api.api import APIResource, AsyncAPIResource
-    from .resources.well_known import WellKnownResource, AsyncWellKnownResource
 
 __all__ = ["Timeout", "Transport", "ProxiesTypes", "RequestOptions", "Crosmos", "AsyncCrosmos", "Client", "AsyncClient"]
 
@@ -87,7 +85,7 @@ class Crosmos(SyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("CROSMOS_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.example.com"
+            base_url = f"https://api.crosmos.dev"
 
         custom_headers_env = os.environ.get("CROSMOS_CUSTOM_HEADERS")
         if custom_headers_env is not None:
@@ -114,18 +112,6 @@ class Crosmos(SyncAPIClient):
         from .resources.api import APIResource
 
         return APIResource(self)
-
-    @cached_property
-    def well_known(self) -> WellKnownResource:
-        from .resources.well_known import WellKnownResource
-
-        return WellKnownResource(self)
-
-    @cached_property
-    def oauth(self) -> OAuthResource:
-        from .resources.oauth import OAuthResource
-
-        return OAuthResource(self)
 
     @cached_property
     def health(self) -> HealthResource:
@@ -293,7 +279,7 @@ class AsyncCrosmos(AsyncAPIClient):
         if base_url is None:
             base_url = os.environ.get("CROSMOS_BASE_URL")
         if base_url is None:
-            base_url = f"https://api.example.com"
+            base_url = f"https://api.crosmos.dev"
 
         custom_headers_env = os.environ.get("CROSMOS_CUSTOM_HEADERS")
         if custom_headers_env is not None:
@@ -320,18 +306,6 @@ class AsyncCrosmos(AsyncAPIClient):
         from .resources.api import AsyncAPIResource
 
         return AsyncAPIResource(self)
-
-    @cached_property
-    def well_known(self) -> AsyncWellKnownResource:
-        from .resources.well_known import AsyncWellKnownResource
-
-        return AsyncWellKnownResource(self)
-
-    @cached_property
-    def oauth(self) -> AsyncOAuthResource:
-        from .resources.oauth import AsyncOAuthResource
-
-        return AsyncOAuthResource(self)
 
     @cached_property
     def health(self) -> AsyncHealthResource:
@@ -470,18 +444,6 @@ class CrosmosWithRawResponse:
         return APIResourceWithRawResponse(self._client.api)
 
     @cached_property
-    def well_known(self) -> well_known.WellKnownResourceWithRawResponse:
-        from .resources.well_known import WellKnownResourceWithRawResponse
-
-        return WellKnownResourceWithRawResponse(self._client.well_known)
-
-    @cached_property
-    def oauth(self) -> oauth.OAuthResourceWithRawResponse:
-        from .resources.oauth import OAuthResourceWithRawResponse
-
-        return OAuthResourceWithRawResponse(self._client.oauth)
-
-    @cached_property
     def health(self) -> health.HealthResourceWithRawResponse:
         from .resources.health import HealthResourceWithRawResponse
 
@@ -499,18 +461,6 @@ class AsyncCrosmosWithRawResponse:
         from .resources.api import AsyncAPIResourceWithRawResponse
 
         return AsyncAPIResourceWithRawResponse(self._client.api)
-
-    @cached_property
-    def well_known(self) -> well_known.AsyncWellKnownResourceWithRawResponse:
-        from .resources.well_known import AsyncWellKnownResourceWithRawResponse
-
-        return AsyncWellKnownResourceWithRawResponse(self._client.well_known)
-
-    @cached_property
-    def oauth(self) -> oauth.AsyncOAuthResourceWithRawResponse:
-        from .resources.oauth import AsyncOAuthResourceWithRawResponse
-
-        return AsyncOAuthResourceWithRawResponse(self._client.oauth)
 
     @cached_property
     def health(self) -> health.AsyncHealthResourceWithRawResponse:
@@ -532,18 +482,6 @@ class CrosmosWithStreamedResponse:
         return APIResourceWithStreamingResponse(self._client.api)
 
     @cached_property
-    def well_known(self) -> well_known.WellKnownResourceWithStreamingResponse:
-        from .resources.well_known import WellKnownResourceWithStreamingResponse
-
-        return WellKnownResourceWithStreamingResponse(self._client.well_known)
-
-    @cached_property
-    def oauth(self) -> oauth.OAuthResourceWithStreamingResponse:
-        from .resources.oauth import OAuthResourceWithStreamingResponse
-
-        return OAuthResourceWithStreamingResponse(self._client.oauth)
-
-    @cached_property
     def health(self) -> health.HealthResourceWithStreamingResponse:
         from .resources.health import HealthResourceWithStreamingResponse
 
@@ -561,18 +499,6 @@ class AsyncCrosmosWithStreamedResponse:
         from .resources.api import AsyncAPIResourceWithStreamingResponse
 
         return AsyncAPIResourceWithStreamingResponse(self._client.api)
-
-    @cached_property
-    def well_known(self) -> well_known.AsyncWellKnownResourceWithStreamingResponse:
-        from .resources.well_known import AsyncWellKnownResourceWithStreamingResponse
-
-        return AsyncWellKnownResourceWithStreamingResponse(self._client.well_known)
-
-    @cached_property
-    def oauth(self) -> oauth.AsyncOAuthResourceWithStreamingResponse:
-        from .resources.oauth import AsyncOAuthResourceWithStreamingResponse
-
-        return AsyncOAuthResourceWithStreamingResponse(self._client.oauth)
 
     @cached_property
     def health(self) -> health.AsyncHealthResourceWithStreamingResponse:

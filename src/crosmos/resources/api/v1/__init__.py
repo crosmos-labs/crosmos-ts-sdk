@@ -8,30 +8,6 @@ from .v1 import (
     V1ResourceWithStreamingResponse,
     AsyncV1ResourceWithStreamingResponse,
 )
-from .auth import (
-    AuthResource,
-    AsyncAuthResource,
-    AuthResourceWithRawResponse,
-    AsyncAuthResourceWithRawResponse,
-    AuthResourceWithStreamingResponse,
-    AsyncAuthResourceWithStreamingResponse,
-)
-from .demo import (
-    DemoResource,
-    AsyncDemoResource,
-    DemoResourceWithRawResponse,
-    AsyncDemoResourceWithRawResponse,
-    DemoResourceWithStreamingResponse,
-    AsyncDemoResourceWithStreamingResponse,
-)
-from .admin import (
-    AdminResource,
-    AsyncAdminResource,
-    AdminResourceWithRawResponse,
-    AsyncAdminResourceWithRawResponse,
-    AdminResourceWithStreamingResponse,
-    AsyncAdminResourceWithStreamingResponse,
-)
 from .search import (
     SearchResource,
     AsyncSearchResource,
@@ -66,12 +42,6 @@ from .memories import (
 )
 
 __all__ = [
-    "AuthResource",
-    "AsyncAuthResource",
-    "AuthResourceWithRawResponse",
-    "AsyncAuthResourceWithRawResponse",
-    "AuthResourceWithStreamingResponse",
-    "AsyncAuthResourceWithStreamingResponse",
     "SpacesResource",
     "AsyncSpacesResource",
     "SpacesResourceWithRawResponse",
@@ -96,18 +66,6 @@ __all__ = [
     "AsyncMemoriesResourceWithRawResponse",
     "MemoriesResourceWithStreamingResponse",
     "AsyncMemoriesResourceWithStreamingResponse",
-    "DemoResource",
-    "AsyncDemoResource",
-    "DemoResourceWithRawResponse",
-    "AsyncDemoResourceWithRawResponse",
-    "DemoResourceWithStreamingResponse",
-    "AsyncDemoResourceWithStreamingResponse",
-    "AdminResource",
-    "AsyncAdminResource",
-    "AdminResourceWithRawResponse",
-    "AsyncAdminResourceWithRawResponse",
-    "AdminResourceWithStreamingResponse",
-    "AsyncAdminResourceWithStreamingResponse",
     "V1Resource",
     "AsyncV1Resource",
     "V1ResourceWithRawResponse",

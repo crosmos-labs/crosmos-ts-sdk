@@ -7,22 +7,6 @@ from datetime import date
 
 import httpx
 
-from .demo import (
-    DemoResource,
-    AsyncDemoResource,
-    DemoResourceWithRawResponse,
-    AsyncDemoResourceWithRawResponse,
-    DemoResourceWithStreamingResponse,
-    AsyncDemoResourceWithStreamingResponse,
-)
-from .admin import (
-    AdminResource,
-    AsyncAdminResource,
-    AdminResourceWithRawResponse,
-    AsyncAdminResourceWithRawResponse,
-    AdminResourceWithStreamingResponse,
-    AsyncAdminResourceWithStreamingResponse,
-)
 from .search import (
     SearchResource,
     AsyncSearchResource,
@@ -57,14 +41,6 @@ from .memories import (
 )
 from ...._types import Body, Omit, Query, Headers, NotGiven, omit, not_given
 from ...._utils import path_template, maybe_transform, async_maybe_transform
-from .auth.auth import (
-    AuthResource,
-    AsyncAuthResource,
-    AuthResourceWithRawResponse,
-    AsyncAuthResourceWithRawResponse,
-    AuthResourceWithStreamingResponse,
-    AsyncAuthResourceWithStreamingResponse,
-)
 from ...._compat import cached_property
 from ...._resource import SyncAPIResource, AsyncAPIResource
 from ...._response import (
@@ -83,10 +59,6 @@ __all__ = ["V1Resource", "AsyncV1Resource"]
 
 class V1Resource(SyncAPIResource):
     @cached_property
-    def auth(self) -> AuthResource:
-        return AuthResource(self._client)
-
-    @cached_property
     def spaces(self) -> SpacesResource:
         return SpacesResource(self._client)
 
@@ -103,20 +75,12 @@ class V1Resource(SyncAPIResource):
         return MemoriesResource(self._client)
 
     @cached_property
-    def demo(self) -> DemoResource:
-        return DemoResource(self._client)
-
-    @cached_property
-    def admin(self) -> AdminResource:
-        return AdminResource(self._client)
-
-    @cached_property
     def with_raw_response(self) -> V1ResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/crosmos-app/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/crosmos-app/crosmos-python-sdk#accessing-raw-response-data-eg-headers
         """
         return V1ResourceWithRawResponse(self)
 
@@ -125,7 +89,7 @@ class V1Resource(SyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/crosmos-app/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/crosmos-app/crosmos-python-sdk#with_streaming_response
         """
         return V1ResourceWithStreamingResponse(self)
 
@@ -215,10 +179,6 @@ class V1Resource(SyncAPIResource):
 
 class AsyncV1Resource(AsyncAPIResource):
     @cached_property
-    def auth(self) -> AsyncAuthResource:
-        return AsyncAuthResource(self._client)
-
-    @cached_property
     def spaces(self) -> AsyncSpacesResource:
         return AsyncSpacesResource(self._client)
 
@@ -235,20 +195,12 @@ class AsyncV1Resource(AsyncAPIResource):
         return AsyncMemoriesResource(self._client)
 
     @cached_property
-    def demo(self) -> AsyncDemoResource:
-        return AsyncDemoResource(self._client)
-
-    @cached_property
-    def admin(self) -> AsyncAdminResource:
-        return AsyncAdminResource(self._client)
-
-    @cached_property
     def with_raw_response(self) -> AsyncV1ResourceWithRawResponse:
         """
         This property can be used as a prefix for any HTTP method call to return
         the raw response object instead of the parsed content.
 
-        For more information, see https://www.github.com/crosmos-app/python-sdk#accessing-raw-response-data-eg-headers
+        For more information, see https://www.github.com/crosmos-app/crosmos-python-sdk#accessing-raw-response-data-eg-headers
         """
         return AsyncV1ResourceWithRawResponse(self)
 
@@ -257,7 +209,7 @@ class AsyncV1Resource(AsyncAPIResource):
         """
         An alternative to `.with_raw_response` that doesn't eagerly read the response body.
 
-        For more information, see https://www.github.com/crosmos-app/python-sdk#with_streaming_response
+        For more information, see https://www.github.com/crosmos-app/crosmos-python-sdk#with_streaming_response
         """
         return AsyncV1ResourceWithStreamingResponse(self)
 
@@ -357,10 +309,6 @@ class V1ResourceWithRawResponse:
         )
 
     @cached_property
-    def auth(self) -> AuthResourceWithRawResponse:
-        return AuthResourceWithRawResponse(self._v1.auth)
-
-    @cached_property
     def spaces(self) -> SpacesResourceWithRawResponse:
         return SpacesResourceWithRawResponse(self._v1.spaces)
 
@@ -376,14 +324,6 @@ class V1ResourceWithRawResponse:
     def memories(self) -> MemoriesResourceWithRawResponse:
         return MemoriesResourceWithRawResponse(self._v1.memories)
 
-    @cached_property
-    def demo(self) -> DemoResourceWithRawResponse:
-        return DemoResourceWithRawResponse(self._v1.demo)
-
-    @cached_property
-    def admin(self) -> AdminResourceWithRawResponse:
-        return AdminResourceWithRawResponse(self._v1.admin)
-
 
 class AsyncV1ResourceWithRawResponse:
     def __init__(self, v1: AsyncV1Resource) -> None:
@@ -395,10 +335,6 @@ class AsyncV1ResourceWithRawResponse:
         self.get_usage = async_to_raw_response_wrapper(
             v1.get_usage,
         )
-
-    @cached_property
-    def auth(self) -> AsyncAuthResourceWithRawResponse:
-        return AsyncAuthResourceWithRawResponse(self._v1.auth)
 
     @cached_property
     def spaces(self) -> AsyncSpacesResourceWithRawResponse:
@@ -416,14 +352,6 @@ class AsyncV1ResourceWithRawResponse:
     def memories(self) -> AsyncMemoriesResourceWithRawResponse:
         return AsyncMemoriesResourceWithRawResponse(self._v1.memories)
 
-    @cached_property
-    def demo(self) -> AsyncDemoResourceWithRawResponse:
-        return AsyncDemoResourceWithRawResponse(self._v1.demo)
-
-    @cached_property
-    def admin(self) -> AsyncAdminResourceWithRawResponse:
-        return AsyncAdminResourceWithRawResponse(self._v1.admin)
-
 
 class V1ResourceWithStreamingResponse:
     def __init__(self, v1: V1Resource) -> None:
@@ -435,10 +363,6 @@ class V1ResourceWithStreamingResponse:
         self.get_usage = to_streamed_response_wrapper(
             v1.get_usage,
         )
-
-    @cached_property
-    def auth(self) -> AuthResourceWithStreamingResponse:
-        return AuthResourceWithStreamingResponse(self._v1.auth)
 
     @cached_property
     def spaces(self) -> SpacesResourceWithStreamingResponse:
@@ -456,14 +380,6 @@ class V1ResourceWithStreamingResponse:
     def memories(self) -> MemoriesResourceWithStreamingResponse:
         return MemoriesResourceWithStreamingResponse(self._v1.memories)
 
-    @cached_property
-    def demo(self) -> DemoResourceWithStreamingResponse:
-        return DemoResourceWithStreamingResponse(self._v1.demo)
-
-    @cached_property
-    def admin(self) -> AdminResourceWithStreamingResponse:
-        return AdminResourceWithStreamingResponse(self._v1.admin)
-
 
 class AsyncV1ResourceWithStreamingResponse:
     def __init__(self, v1: AsyncV1Resource) -> None:
@@ -475,10 +391,6 @@ class AsyncV1ResourceWithStreamingResponse:
         self.get_usage = async_to_streamed_response_wrapper(
             v1.get_usage,
         )
-
-    @cached_property
-    def auth(self) -> AsyncAuthResourceWithStreamingResponse:
-        return AsyncAuthResourceWithStreamingResponse(self._v1.auth)
 
     @cached_property
     def spaces(self) -> AsyncSpacesResourceWithStreamingResponse:
@@ -495,11 +407,3 @@ class AsyncV1ResourceWithStreamingResponse:
     @cached_property
     def memories(self) -> AsyncMemoriesResourceWithStreamingResponse:
         return AsyncMemoriesResourceWithStreamingResponse(self._v1.memories)
-
-    @cached_property
-    def demo(self) -> AsyncDemoResourceWithStreamingResponse:
-        return AsyncDemoResourceWithStreamingResponse(self._v1.demo)
-
-    @cached_property
-    def admin(self) -> AsyncAdminResourceWithStreamingResponse:
-        return AsyncAdminResourceWithStreamingResponse(self._v1.admin)
