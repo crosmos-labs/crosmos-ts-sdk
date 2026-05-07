@@ -1,6 +1,6 @@
 {
   "name": "crosmos",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "The official TypeScript library for the Crosmos API",
   "author": "Crosmos <support@crosmos.dev>",
   "types": "dist/index.d.ts",
