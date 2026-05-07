@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "main": "dist/index.js",
   "type": "commonjs",
-  "repository": "github:crosmos-app/crosmos-ts-sdk",
+  "repository": "github:crosmos-labs/crosmos-ts-sdk",
   "license": "Apache-2.0",
   "packageManager": "pnpm@10.30.1",
   "files": [
