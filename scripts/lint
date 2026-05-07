@@ -4,19 +4,21 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-if [ "$1" = "--fix" ]; then
-  echo "==> Running ruff with --fix"
-  uv run ruff check . --fix
-else
-  echo "==> Running ruff"
-  uv run ruff check .
-fi
+echo "==> Running prettier --check"
+./node_modules/.bin/prettier --check .
 
-echo "==> Running pyright"
-uv run pyright
+echo "==> Running eslint"
+./node_modules/.bin/eslint .
 
-echo "==> Running mypy"
-uv run mypy .
+echo "==> Building"
+./scripts/build
 
-echo "==> Making sure it imports"
-uv run python -c 'import crosmos'
+echo "==> Checking types"
+./node_modules/typescript/bin/tsc
+
+echo "==> Running Are The Types Wrong?"
+./node_modules/.bin/attw --pack dist -f json >.attw.json || true
+node scripts/utils/attw-report.cjs
+
+echo "==> Running publint"
+./node_modules/.bin/publint dist

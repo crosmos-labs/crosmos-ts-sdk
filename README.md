@@ -1,172 +1,79 @@
-# Crosmos Python API library
+# Crosmos TypeScript API Library
 
-<!-- prettier-ignore -->
-[![PyPI version](https://img.shields.io/pypi/v/crosmos.svg?label=pypi%20(stable))](https://pypi.org/project/crosmos/)
+[![NPM version](<https://img.shields.io/npm/v/crosmos.svg?label=npm%20(stable)>)](https://npmjs.org/package/crosmos) ![npm bundle size](https://img.shields.io/bundlephobia/minzip/crosmos)
 
-The Crosmos Python library provides convenient access to the Crosmos REST API from any Python 3.9+
-application. The library includes type definitions for all request params and response fields,
-and offers both synchronous and asynchronous clients powered by [httpx](https://github.com/encode/httpx).
-
-It is generated with [Stainless](https://www.stainless.com/).
-
-## Documentation
+This library provides convenient access to the Crosmos REST API from server-side TypeScript or JavaScript.
 
 The REST API documentation can be found on [docs.crosmos.dev](https://docs.crosmos.dev). The full API of this library can be found in [api.md](api.md).
+
+It is generated with [Stainless](https://www.stainless.com/).
 
 ## Installation
 
 ```sh
-# install from PyPI
-pip install crosmos
+npm install crosmos
 ```
 
 ## Usage
 
 The full API of this library can be found in [api.md](api.md).
 
-```python
-import os
-from crosmos import Crosmos
+<!-- prettier-ignore -->
+```js
+import Crosmos from 'crosmos';
 
-client = Crosmos(
-    api_key=os.environ.get("CROSMOS_API_KEY"),  # This is the default and can be omitted
-)
+const client = new Crosmos({
+  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
+});
 
-search = client.search.hybrid(
-    query="What is my primary language?",
-    space_id=0,
-)
-print(search.candidates)
+const search = await client.search.hybrid({
+  query: 'What is my primary language?',
+  space_id: '<your-space-uuid>',
+});
+
+console.log(search.candidates);
 ```
 
-While you can provide an `api_key` keyword argument,
-we recommend using [python-dotenv](https://pypi.org/project/python-dotenv/)
-to add `CROSMOS_API_KEY="My API Key"` to your `.env` file
-so that your API Key is not stored in source control.
+### Request & Response types
 
-## Async usage
+This library includes TypeScript definitions for all request params and response fields. You may import and use them like so:
 
-Simply import `AsyncCrosmos` instead of `Crosmos` and use `await` with each API call:
+<!-- prettier-ignore -->
+```ts
+import Crosmos from 'crosmos';
 
-```python
-import os
-import asyncio
-from crosmos import AsyncCrosmos
+const client = new Crosmos({
+  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
+});
 
-client = AsyncCrosmos(
-    api_key=os.environ.get("CROSMOS_API_KEY"),  # This is the default and can be omitted
-)
-
-
-async def main() -> None:
-    search = await client.search.hybrid(
-        query="What is my primary language?",
-        space_id=0,
-    )
-    print(search.candidates)
-
-
-asyncio.run(main())
+const params: Crosmos.SearchHybridParams = {
+  query: 'What is my primary language?',
+  space_id: '<your-space-uuid>',
+};
+const search: Crosmos.Search = await client.search.hybrid(params);
 ```
 
-Functionality between the synchronous and asynchronous clients is otherwise identical.
-
-### With aiohttp
-
-By default, the async client uses `httpx` for HTTP requests. However, for improved concurrency performance you may also use `aiohttp` as the HTTP backend.
-
-You can enable this by installing `aiohttp`:
-
-```sh
-# install from PyPI
-pip install crosmos[aiohttp]
-```
-
-Then you can enable it by instantiating the client with `http_client=DefaultAioHttpClient()`:
-
-```python
-import os
-import asyncio
-from crosmos import DefaultAioHttpClient
-from crosmos import AsyncCrosmos
-
-
-async def main() -> None:
-    async with AsyncCrosmos(
-        api_key=os.environ.get("CROSMOS_API_KEY"),  # This is the default and can be omitted
-        http_client=DefaultAioHttpClient(),
-    ) as client:
-        search = await client.search.hybrid(
-            query="What is my primary language?",
-            space_id=0,
-        )
-        print(search.candidates)
-
-
-asyncio.run(main())
-```
-
-## Using types
-
-Nested request parameters are [TypedDicts](https://docs.python.org/3/library/typing.html#typing.TypedDict). Responses are [Pydantic models](https://docs.pydantic.dev) which also provide helper methods for things like:
-
-- Serializing back into JSON, `model.to_json()`
-- Converting to a dictionary, `model.to_dict()`
-
-Typed requests and responses provide autocomplete and documentation within your editor. If you would like to see type errors in VS Code to help catch bugs earlier, set `python.analysis.typeCheckingMode` to `basic`.
-
-## Nested params
-
-Nested parameters are dictionaries, typed using `TypedDict`, for example:
-
-```python
-from crosmos import Crosmos
-
-client = Crosmos()
-
-response = client.sources.ingest(
-    space_id=0,
-    messages={
-        "messages": [
-            {
-                "content": "x",
-                "role": "x",
-            }
-        ]
-    },
-)
-print(response.messages)
-```
+Documentation for each method, request param, and response field are available in docstrings and will appear on hover in most modern editors.
 
 ## Handling errors
 
-When the library is unable to connect to the API (for example, due to network connection problems or a timeout), a subclass of `crosmos.APIConnectionError` is raised.
+When the library is unable to connect to the API,
+or if the API returns a non-success status code (i.e., 4xx or 5xx response),
+a subclass of `APIError` will be thrown:
 
-When the API returns a non-success status code (that is, 4xx or 5xx
-response), a subclass of `crosmos.APIStatusError` is raised, containing `status_code` and `response` properties.
-
-All errors inherit from `crosmos.APIError`.
-
-```python
-import crosmos
-from crosmos import Crosmos
-
-client = Crosmos()
-
-try:
-    client.search.hybrid(
-        query="What is my primary language?",
-        space_id=0,
-    )
-except crosmos.APIConnectionError as e:
-    print("The server could not be reached")
-    print(e.__cause__)  # an underlying Exception, likely raised within httpx.
-except crosmos.RateLimitError as e:
-    print("A 429 status code was received; we should back off a bit.")
-except crosmos.APIStatusError as e:
-    print("Another non-200-range status code was received")
-    print(e.status_code)
-    print(e.response)
+<!-- prettier-ignore -->
+```ts
+const search = await client.search
+  .hybrid({ query: 'What is my primary language?', space_id: '<your-space-uuid>' })
+  .catch(async (err) => {
+    if (err instanceof Crosmos.APIError) {
+      console.log(err.status); // 400
+      console.log(err.name); // BadRequestError
+      console.log(err.headers); // {server: 'nginx', ...}
+    } else {
+      throw err;
+    }
+  });
 ```
 
 Error codes are as follows:
@@ -184,202 +91,251 @@ Error codes are as follows:
 
 ### Retries
 
-Certain errors are automatically retried 2 times by default, with a short exponential backoff.
+Certain errors will be automatically retried 2 times by default, with a short exponential backoff.
 Connection errors (for example, due to a network connectivity problem), 408 Request Timeout, 409 Conflict,
-429 Rate Limit, and >=500 Internal errors are all retried by default.
+429 Rate Limit, and >=500 Internal errors will all be retried by default.
 
-You can use the `max_retries` option to configure or disable retry settings:
+You can use the `maxRetries` option to configure or disable this:
 
-```python
-from crosmos import Crosmos
+<!-- prettier-ignore -->
+```js
+// Configure the default for all requests:
+const client = new Crosmos({
+  maxRetries: 0, // default is 2
+});
 
-# Configure the default for all requests:
-client = Crosmos(
-    # default is 2
-    max_retries=0,
-)
-
-# Or, configure per-request:
-client.with_options(max_retries=5).search.hybrid(
-    query="What is my primary language?",
-    space_id=0,
-)
+// Or, configure per-request:
+await client.search.hybrid({ query: 'What is my primary language?', space_id: '<your-space-uuid>' }, {
+  maxRetries: 5,
+});
 ```
 
 ### Timeouts
 
-By default requests time out after 1 minute. You can configure this with a `timeout` option,
-which accepts a float or an [`httpx.Timeout`](https://www.python-httpx.org/advanced/timeouts/#fine-tuning-the-configuration) object:
+Requests time out after 1 minute by default. You can configure this with a `timeout` option:
 
-```python
-from crosmos import Crosmos
+<!-- prettier-ignore -->
+```ts
+// Configure the default for all requests:
+const client = new Crosmos({
+  timeout: 20 * 1000, // 20 seconds (default is 1 minute)
+});
 
-# Configure the default for all requests:
-client = Crosmos(
-    # 20 seconds (default is 1 minute)
-    timeout=20.0,
-)
-
-# More granular control:
-client = Crosmos(
-    timeout=httpx.Timeout(60.0, read=5.0, write=10.0, connect=2.0),
-)
-
-# Override per-request:
-client.with_options(timeout=5.0).search.hybrid(
-    query="What is my primary language?",
-    space_id=0,
-)
+// Override per-request:
+await client.search.hybrid({ query: 'What is my primary language?', space_id: '<your-space-uuid>' }, {
+  timeout: 5 * 1000,
+});
 ```
 
-On timeout, an `APITimeoutError` is thrown.
+On timeout, an `APIConnectionTimeoutError` is thrown.
 
-Note that requests that time out are [retried twice by default](#retries).
+Note that requests which time out will be [retried twice by default](#retries).
 
-## Advanced
+## Advanced Usage
+
+### Accessing raw Response data (e.g., headers)
+
+The "raw" `Response` returned by `fetch()` can be accessed through the `.asResponse()` method on the `APIPromise` type that all methods return.
+This method returns as soon as the headers for a successful response are received and does not consume the response body, so you are free to write custom parsing or streaming logic.
+
+You can also use the `.withResponse()` method to get the raw `Response` along with the parsed data.
+Unlike `.asResponse()` this method consumes the body, returning once it is parsed.
+
+<!-- prettier-ignore -->
+```ts
+const client = new Crosmos();
+
+const response = await client.search
+  .hybrid({ query: 'What is my primary language?', space_id: '<your-space-uuid>' })
+  .asResponse();
+console.log(response.headers.get('X-My-Header'));
+console.log(response.statusText); // access the underlying Response object
+
+const { data: search, response: raw } = await client.search
+  .hybrid({ query: 'What is my primary language?', space_id: '<your-space-uuid>' })
+  .withResponse();
+console.log(raw.headers.get('X-My-Header'));
+console.log(search.candidates);
+```
 
 ### Logging
 
-We use the standard library [`logging`](https://docs.python.org/3/library/logging.html) module.
+> [!IMPORTANT]
+> All log messages are intended for debugging only. The format and content of log messages
+> may change between releases.
 
-You can enable logging by setting the environment variable `CROSMOS_LOG` to `info`.
+#### Log levels
 
-```shell
-$ export CROSMOS_LOG=info
+The log level can be configured in two ways:
+
+1. Via the `CROSMOS_LOG` environment variable
+2. Using the `logLevel` client option (overrides the environment variable if set)
+
+```ts
+import Crosmos from 'crosmos';
+
+const client = new Crosmos({
+  logLevel: 'debug', // Show all log messages
+});
 ```
 
-Or to `debug` for more verbose logging.
+Available log levels, from most to least verbose:
 
-### How to tell whether `None` means `null` or missing
+- `'debug'` - Show debug messages, info, warnings, and errors
+- `'info'` - Show info messages, warnings, and errors
+- `'warn'` - Show warnings and errors (default)
+- `'error'` - Show only errors
+- `'off'` - Disable all logging
 
-In an API response, a field may be explicitly `null`, or missing entirely; in either case, its value is `None` in this library. You can differentiate the two cases with `.model_fields_set`:
+At the `'debug'` level, all HTTP requests and responses are logged, including headers and bodies.
+Some authentication-related headers are redacted, but sensitive data in request and response bodies
+may still be visible.
 
-```py
-if response.my_field is None:
-  if 'my_field' not in response.model_fields_set:
-    print('Got json like {}, without a "my_field" key present at all.')
-  else:
-    print('Got json like {"my_field": null}.')
+#### Custom logger
+
+By default, this library logs to `globalThis.console`. You can also provide a custom logger.
+Most logging libraries are supported, including [pino](https://www.npmjs.com/package/pino), [winston](https://www.npmjs.com/package/winston), [bunyan](https://www.npmjs.com/package/bunyan), [consola](https://www.npmjs.com/package/consola), [signale](https://www.npmjs.com/package/signale), and [@std/log](https://jsr.io/@std/log). If your logger doesn't work, please open an issue.
+
+When providing a custom logger, the `logLevel` option still controls which messages are emitted, messages
+below the configured level will not be sent to your logger.
+
+```ts
+import Crosmos from 'crosmos';
+import pino from 'pino';
+
+const logger = pino();
+
+const client = new Crosmos({
+  logger: logger.child({ name: 'Crosmos' }),
+  logLevel: 'debug', // Send all messages to pino, allowing it to filter
+});
 ```
-
-### Accessing raw response data (e.g. headers)
-
-The "raw" Response object can be accessed by prefixing `.with_raw_response.` to any HTTP method call, e.g.,
-
-```py
-from crosmos import Crosmos
-
-client = Crosmos()
-response = client.search.with_raw_response.hybrid(
-    query="What is my primary language?",
-    space_id=0,
-)
-print(response.headers.get('X-My-Header'))
-
-search = response.parse()  # get the object that `search.hybrid()` would have returned
-print(search.candidates)
-```
-
-These methods return an [`APIResponse`](https://github.com/crosmos-app/crosmos-python-sdk/tree/main/src/crosmos/_response.py) object.
-
-The async client returns an [`AsyncAPIResponse`](https://github.com/crosmos-app/crosmos-python-sdk/tree/main/src/crosmos/_response.py) with the same structure, the only difference being `await`able methods for reading the response content.
-
-#### `.with_streaming_response`
-
-The above interface eagerly reads the full response body when you make the request, which may not always be what you want.
-
-To stream the response body, use `.with_streaming_response` instead, which requires a context manager and only reads the response body once you call `.read()`, `.text()`, `.json()`, `.iter_bytes()`, `.iter_text()`, `.iter_lines()` or `.parse()`. In the async client, these are async methods.
-
-```python
-with client.search.with_streaming_response.hybrid(
-    query="What is my primary language?",
-    space_id=0,
-) as response:
-    print(response.headers.get("X-My-Header"))
-
-    for line in response.iter_lines():
-        print(line)
-```
-
-The context manager is required so that the response will reliably be closed.
 
 ### Making custom/undocumented requests
 
-This library is typed for convenient access to the documented API.
-
-If you need to access undocumented endpoints, params, or response properties, the library can still be used.
+This library is typed for convenient access to the documented API. If you need to access undocumented
+endpoints, params, or response properties, the library can still be used.
 
 #### Undocumented endpoints
 
-To make requests to undocumented endpoints, you can make requests using `client.get`, `client.post`, and other
-http verbs. Options on the client will be respected (such as retries) when making this request.
+To make requests to undocumented endpoints, you can use `client.get`, `client.post`, and other HTTP verbs.
+Options on the client, such as retries, will be respected when making these requests.
 
-```py
-import httpx
-
-response = client.post(
-    "/foo",
-    cast_to=httpx.Response,
-    body={"my_param": True},
-)
-
-print(response.headers.get("x-foo"))
+```ts
+await client.post('/some/path', {
+  body: { some_prop: 'foo' },
+  query: { some_query_arg: 'bar' },
+});
 ```
 
 #### Undocumented request params
 
-If you want to explicitly send an extra param, you can do so with the `extra_query`, `extra_body`, and `extra_headers` request
+To make requests using undocumented parameters, you may use `// @ts-expect-error` on the undocumented
+parameter. This library doesn't validate at runtime that the request matches the type, so any extra values you
+send will be sent as-is.
+
+```ts
+client.search.hybrid({
+  // ...
+  // @ts-expect-error baz is not yet public
+  baz: 'undocumented option',
+});
+```
+
+For requests with the `GET` verb, any extra params will be in the query, all other requests will send the
+extra param in the body.
+
+If you want to explicitly send an extra argument, you can do so with the `query`, `body`, and `headers` request
 options.
 
 #### Undocumented response properties
 
-To access undocumented response properties, you can access the extra fields like `response.unknown_prop`. You
-can also get all the extra fields on the Pydantic model as a dict with
-[`response.model_extra`](https://docs.pydantic.dev/latest/api/base_model/#pydantic.BaseModel.model_extra).
+To access undocumented response properties, you may access the response object with `// @ts-expect-error` on
+the response object, or cast the response object to the requisite type. Like the request params, we do not
+validate or strip extra properties from the response from the API.
 
-### Configuring the HTTP client
+### Customizing the fetch client
 
-You can directly override the [httpx client](https://www.python-httpx.org/api/#client) to customize it for your use case, including:
+By default, this library expects a global `fetch` function is defined.
 
-- Support for [proxies](https://www.python-httpx.org/advanced/proxies/)
-- Custom [transports](https://www.python-httpx.org/advanced/transports/)
-- Additional [advanced](https://www.python-httpx.org/advanced/clients/) functionality
+If you want to use a different `fetch` function, you can either polyfill the global:
 
-```python
-import httpx
-from crosmos import Crosmos, DefaultHttpxClient
+```ts
+import fetch from 'my-fetch';
 
-client = Crosmos(
-    # Or use the `CROSMOS_BASE_URL` env var
-    base_url="http://my.test.server.example.com:8083",
-    http_client=DefaultHttpxClient(
-        proxy="http://my.test.proxy.example.com",
-        transport=httpx.HTTPTransport(local_address="0.0.0.0"),
-    ),
-)
+globalThis.fetch = fetch;
 ```
 
-You can also customize the client on a per-request basis by using `with_options()`:
+Or pass it to the client:
 
-```python
-client.with_options(http_client=DefaultHttpxClient(...))
+```ts
+import Crosmos from 'crosmos';
+import fetch from 'my-fetch';
+
+const client = new Crosmos({ fetch });
 ```
 
-### Managing HTTP resources
+### Fetch options
 
-By default the library closes underlying HTTP connections whenever the client is [garbage collected](https://docs.python.org/3/reference/datamodel.html#object.__del__). You can manually close the client using the `.close()` method if desired, or with a context manager that closes when exiting.
+If you want to set custom `fetch` options without overriding the `fetch` function, you can provide a `fetchOptions` object when instantiating the client or making a request. (Request-specific options override client options.)
 
-```py
-from crosmos import Crosmos
+```ts
+import Crosmos from 'crosmos';
 
-with Crosmos() as client:
-  # make requests here
-  ...
-
-# HTTP client is now closed
+const client = new Crosmos({
+  fetchOptions: {
+    // `RequestInit` options
+  },
+});
 ```
 
-## Versioning
+#### Configuring proxies
+
+To modify proxy behavior, you can provide custom `fetchOptions` that add runtime-specific proxy
+options to requests:
+
+<img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/node.svg" align="top" width="18" height="21"> **Node** <sup>[[docs](https://github.com/nodejs/undici/blob/main/docs/docs/api/ProxyAgent.md#example---proxyagent-with-fetch)]</sup>
+
+```ts
+import Crosmos from 'crosmos';
+import * as undici from 'undici';
+
+const proxyAgent = new undici.ProxyAgent('http://localhost:8888');
+const client = new Crosmos({
+  fetchOptions: {
+    dispatcher: proxyAgent,
+  },
+});
+```
+
+<img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/bun.svg" align="top" width="18" height="21"> **Bun** <sup>[[docs](https://bun.sh/guides/http/proxy)]</sup>
+
+```ts
+import Crosmos from 'crosmos';
+
+const client = new Crosmos({
+  fetchOptions: {
+    proxy: 'http://localhost:8888',
+  },
+});
+```
+
+<img src="https://raw.githubusercontent.com/stainless-api/sdk-assets/refs/heads/main/deno.svg" align="top" width="18" height="21"> **Deno** <sup>[[docs](https://docs.deno.com/api/deno/~/Deno.createHttpClient)]</sup>
+
+```ts
+import Crosmos from 'npm:crosmos';
+
+const httpClient = Deno.createHttpClient({ proxy: { url: 'http://localhost:8888' } });
+const client = new Crosmos({
+  fetchOptions: {
+    client: httpClient,
+  },
+});
+```
+
+## Frequently Asked Questions
+
+## Semantic versioning
 
 This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) conventions, though certain backwards-incompatible changes may be released as minor versions:
 
@@ -389,22 +345,26 @@ This package generally follows [SemVer](https://semver.org/spec/v2.0.0.html) con
 
 We take backwards-compatibility seriously and work hard to ensure you can rely on a smooth upgrade experience.
 
-We are keen for your feedback; please open an [issue](https://www.github.com/crosmos-app/crosmos-python-sdk/issues) with questions, bugs, or suggestions.
-
-### Determining the installed version
-
-If you've upgraded to the latest version but aren't seeing any new features you were expecting then your python environment is likely still using an older version.
-
-You can determine the version that is being used at runtime with:
-
-```py
-import crosmos
-print(crosmos.__version__)
-```
+We are keen for your feedback; please open an [issue](https://www.github.com/crosmos-app/crosmos-ts-sdk/issues) with questions, bugs, or suggestions.
 
 ## Requirements
 
-Python 3.9 or higher.
+TypeScript >= 4.9 is supported.
+
+The following runtimes are supported:
+
+- Web browsers (Up-to-date Chrome, Firefox, Safari, Edge, and more)
+- Node.js 20 LTS or later ([non-EOL](https://endoflife.date/nodejs)) versions.
+- Deno v1.28.0 or higher.
+- Bun 1.0 or later.
+- Cloudflare Workers.
+- Vercel Edge Runtime.
+- Jest 28 or greater with the `"node"` environment (`"jsdom"` is not supported at this time).
+- Nitro v2.6 or greater.
+
+Note that React Native is not supported at this time.
+
+If you are interested in other runtime environments, please open or upvote an issue on GitHub.
 
 ## Contributing
 

@@ -59,8 +59,6 @@
       "hidden": true
     }
   ],
-  "release-type": "python",
-  "extra-files": [
-    "src/crosmos/_version.py"
-  ]
+  "release-type": "node",
+  "extra-files": ["src/version.ts", "README.md"]
 }

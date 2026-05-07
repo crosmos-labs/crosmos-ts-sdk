@@ -1,2 +1,1 @@
-brew "uv"
-
+brew "node"

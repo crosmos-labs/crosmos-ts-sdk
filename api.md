@@ -2,89 +2,103 @@
 
 Types:
 
-```python
-from crosmos.types import Space, SpaceListResponse
-```
+- <code><a href="./src/resources/spaces.ts">Space</a></code>
+- <code><a href="./src/resources/spaces.ts">SpaceList</a></code>
 
 Methods:
 
-- <code title="post /api/v1/spaces">client.spaces.<a href="./src/crosmos/resources/spaces.py">create</a>(\*\*<a href="src/crosmos/types/space_create_params.py">params</a>) -> <a href="./src/crosmos/types/space.py">Space</a></code>
-- <code title="get /api/v1/spaces">client.spaces.<a href="./src/crosmos/resources/spaces.py">list</a>() -> <a href="./src/crosmos/types/space_list_response.py">SpaceListResponse</a></code>
-- <code title="delete /api/v1/spaces/{space_id}">client.spaces.<a href="./src/crosmos/resources/spaces.py">delete</a>(space_id) -> None</code>
-- <code title="get /api/v1/spaces/{space_id}">client.spaces.<a href="./src/crosmos/resources/spaces.py">get</a>(space_id) -> <a href="./src/crosmos/types/space.py">Space</a></code>
+- <code title="post /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">create</a>({ ...params }) -> Space</code>
+- <code title="get /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">list</a>({ ...params }) -> SpaceList</code>
+- <code title="delete /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">delete</a>(spaceUuid) -> void</code>
+- <code title="get /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">get</a>(spaceUuid) -> Space</code>
 
 # Search
 
 Types:
 
-```python
-from crosmos.types import Search
-```
+- <code><a href="./src/resources/search.ts">Search</a></code>
 
 Methods:
 
-- <code title="post /api/v1/search">client.search.<a href="./src/crosmos/resources/search.py">hybrid</a>(\*\*<a href="src/crosmos/types/search_hybrid_params.py">params</a>) -> <a href="./src/crosmos/types/search.py">Search</a></code>
+- <code title="post /api/v1/search">client.search.<a href="./src/resources/search.ts">hybrid</a>({ ...params }) -> Search</code>
 
 # Sources
 
 Types:
 
-```python
-from crosmos.types import Source, SourceListResponse, SourceIngestResponse
-```
+- <code><a href="./src/resources/sources.ts">IngestAccepted</a></code>
+- <code><a href="./src/resources/sources.ts">Source</a></code>
+- <code><a href="./src/resources/sources.ts">SourceList</a></code>
 
 Methods:
 
-- <code title="get /api/v1/sources">client.sources.<a href="./src/crosmos/resources/sources.py">list</a>(\*\*<a href="src/crosmos/types/source_list_params.py">params</a>) -> <a href="./src/crosmos/types/source_list_response.py">SourceListResponse</a></code>
-- <code title="delete /api/v1/sources/{source_id}">client.sources.<a href="./src/crosmos/resources/sources.py">delete</a>(source_id) -> None</code>
-- <code title="get /api/v1/sources/{source_id}">client.sources.<a href="./src/crosmos/resources/sources.py">get</a>(source_id) -> <a href="./src/crosmos/types/source.py">Source</a></code>
-- <code title="post /api/v1/sources">client.sources.<a href="./src/crosmos/resources/sources.py">ingest</a>(\*\*<a href="src/crosmos/types/source_ingest_params.py">params</a>) -> <a href="./src/crosmos/types/source_ingest_response.py">SourceIngestResponse</a></code>
+- <code title="get /api/v1/sources">client.sources.<a href="./src/resources/sources.ts">list</a>({ ...params }) -> SourceList</code>
+- <code title="delete /api/v1/sources/{source_uuid}">client.sources.<a href="./src/resources/sources.ts">delete</a>(sourceUuid, { ...params }) -> void</code>
+- <code title="get /api/v1/sources/{source_uuid}">client.sources.<a href="./src/resources/sources.ts">get</a>(sourceUuid, { ...params }) -> Source</code>
+- <code title="post /api/v1/sources">client.sources.<a href="./src/resources/sources.ts">ingest</a>({ ...params }) -> IngestAccepted</code>
 
 # Memories
 
 Types:
 
-```python
-from crosmos.types import Memory, MemoryListResponse
-```
+- <code><a href="./src/resources/memories.ts">Memory</a></code>
+- <code><a href="./src/resources/memories.ts">MemoryList</a></code>
 
 Methods:
 
-- <code title="get /api/v1/memories">client.memories.<a href="./src/crosmos/resources/memories.py">list</a>(\*\*<a href="src/crosmos/types/memory_list_params.py">params</a>) -> <a href="./src/crosmos/types/memory_list_response.py">MemoryListResponse</a></code>
-- <code title="get /api/v1/memories/{memory_id}">client.memories.<a href="./src/crosmos/resources/memories.py">get</a>(memory_id) -> <a href="./src/crosmos/types/memory.py">Memory</a></code>
+- <code title="get /api/v1/memories">client.memories.<a href="./src/resources/memories.ts">list</a>({ ...params }) -> MemoryList</code>
+- <code title="delete /api/v1/memories/{memory_uuid}">client.memories.<a href="./src/resources/memories.ts">delete</a>(memoryUuid, { ...params }) -> void</code>
+- <code title="get /api/v1/memories/{memory_uuid}">client.memories.<a href="./src/resources/memories.ts">get</a>(memoryUuid, { ...params }) -> Memory</code>
 
-# Usage
+# Entities
 
 Types:
 
-```python
-from crosmos.types import UsageGetResponse
-```
+- <code><a href="./src/resources/entities.ts">Entity</a></code>
+- <code><a href="./src/resources/entities.ts">EntityDetail</a></code>
+- <code><a href="./src/resources/entities.ts">EntityList</a></code>
 
 Methods:
 
-- <code title="get /api/v1/usage">client.usage.<a href="./src/crosmos/resources/usage.py">get</a>(\*\*<a href="src/crosmos/types/usage_get_params.py">params</a>) -> <a href="./src/crosmos/types/usage_get_response.py">UsageGetResponse</a></code>
+- <code title="get /api/v1/entities">client.entities.<a href="./src/resources/entities.ts">list</a>({ ...params }) -> EntityList</code>
+- <code title="get /api/v1/entities/{entity_uuid}">client.entities.<a href="./src/resources/entities.ts">get</a>(entityUuid, { ...params }) -> EntityDetail</code>
+
+# Conversations
+
+Types:
+
+- <code><a href="./src/resources/conversations.ts">IngestConversation</a></code>
+
+Methods:
+
+- <code title="post /api/v1/conversations">client.conversations.<a href="./src/resources/conversations.ts">ingest</a>({ ...params }) -> IngestConversation</code>
 
 # Jobs
 
 Types:
 
-```python
-from crosmos.types import JobGetStatusResponse
-```
+- <code><a href="./src/resources/jobs.ts">Job</a></code>
 
 Methods:
 
-- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/crosmos/resources/jobs.py">get_status</a>(job_id) -> <a href="./src/crosmos/types/job_get_status_response.py">JobGetStatusResponse</a></code>
+- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">getStatus</a>(jobID) -> Job</code>
+
+# Usage
+
+Types:
+
+- <code><a href="./src/resources/usage.ts">Usage</a></code>
+
+Methods:
+
+- <code title="get /api/v1/usage">client.usage.<a href="./src/resources/usage.ts">get</a>({ ...params }) -> Usage</code>
 
 # Health
 
 Types:
 
-```python
-from crosmos.types import HealthCheckResponse
-```
+- <code><a href="./src/resources/health.ts">HealthCheckResponse</a></code>
 
 Methods:
 
-- <code title="get /health">client.health.<a href="./src/crosmos/resources/health.py">check</a>() -> <a href="./src/crosmos/types/health_check_response.py">HealthCheckResponse</a></code>
+- <code title="get /health">client.health.<a href="./src/resources/health.ts">check</a>() -> HealthCheckResponse</code>
