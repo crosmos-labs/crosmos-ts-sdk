@@ -6,12 +6,12 @@ from typing import Union, Optional
 from datetime import date
 from typing_extensions import Annotated, TypedDict
 
-from ..._utils import PropertyInfo
+from .._utils import PropertyInfo
 
-__all__ = ["V1GetUsageParams"]
+__all__ = ["UsageGetParams"]
 
 
-class V1GetUsageParams(TypedDict, total=False):
+class UsageGetParams(TypedDict, total=False):
     end_date: Annotated[Union[str, date, None], PropertyInfo(format="iso8601")]
     """End date (defaults to today)"""
 

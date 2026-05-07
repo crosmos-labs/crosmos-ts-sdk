@@ -4,19 +4,19 @@ from __future__ import annotations
 
 import httpx
 
-from ...._types import Body, Query, Headers, NotGiven, not_given
-from ...._utils import maybe_transform, async_maybe_transform
-from ...._compat import cached_property
-from ...._resource import SyncAPIResource, AsyncAPIResource
-from ...._response import (
+from ..types import search_hybrid_params
+from .._types import Body, Query, Headers, NotGiven, not_given
+from .._utils import maybe_transform, async_maybe_transform
+from .._compat import cached_property
+from .._resource import SyncAPIResource, AsyncAPIResource
+from .._response import (
     to_raw_response_wrapper,
     to_streamed_response_wrapper,
     async_to_raw_response_wrapper,
     async_to_streamed_response_wrapper,
 )
-from ...._base_client import make_request_options
-from ....types.api.v1 import search_get_params, search_perform_params
-from ....types.api.v1.search import Search
+from .._base_client import make_request_options
+from ..types.search import Search
 
 __all__ = ["SearchResource", "AsyncSearchResource"]
 
@@ -41,53 +41,7 @@ class SearchResource(SyncAPIResource):
         """
         return SearchResourceWithStreamingResponse(self)
 
-    def get(
-        self,
-        *,
-        q: str,
-        space_id: int,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Search:
-        """
-        Search memories using GET request (convenience endpoint).
-
-        Args:
-          q: The search query text
-
-          space_id: The memory space to search within
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return self._get(
-            "/api/v1/search",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=maybe_transform(
-                    {
-                        "q": q,
-                        "space_id": space_id,
-                    },
-                    search_get_params.SearchGetParams,
-                ),
-            ),
-            cast_to=Search,
-        )
-
-    def perform(
+    def hybrid(
         self,
         *,
         query: str,
@@ -125,7 +79,7 @@ class SearchResource(SyncAPIResource):
                     "query": query,
                     "space_id": space_id,
                 },
-                search_perform_params.SearchPerformParams,
+                search_hybrid_params.SearchHybridParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -154,53 +108,7 @@ class AsyncSearchResource(AsyncAPIResource):
         """
         return AsyncSearchResourceWithStreamingResponse(self)
 
-    async def get(
-        self,
-        *,
-        q: str,
-        space_id: int,
-        # Use the following arguments if you need to pass additional parameters to the API that aren't available via kwargs.
-        # The extra values given here take precedence over values defined on the client or passed to this method.
-        extra_headers: Headers | None = None,
-        extra_query: Query | None = None,
-        extra_body: Body | None = None,
-        timeout: float | httpx.Timeout | None | NotGiven = not_given,
-    ) -> Search:
-        """
-        Search memories using GET request (convenience endpoint).
-
-        Args:
-          q: The search query text
-
-          space_id: The memory space to search within
-
-          extra_headers: Send extra headers
-
-          extra_query: Add additional query parameters to the request
-
-          extra_body: Add additional JSON properties to the request
-
-          timeout: Override the client-level default timeout for this request, in seconds
-        """
-        return await self._get(
-            "/api/v1/search",
-            options=make_request_options(
-                extra_headers=extra_headers,
-                extra_query=extra_query,
-                extra_body=extra_body,
-                timeout=timeout,
-                query=await async_maybe_transform(
-                    {
-                        "q": q,
-                        "space_id": space_id,
-                    },
-                    search_get_params.SearchGetParams,
-                ),
-            ),
-            cast_to=Search,
-        )
-
-    async def perform(
+    async def hybrid(
         self,
         *,
         query: str,
@@ -238,7 +146,7 @@ class AsyncSearchResource(AsyncAPIResource):
                     "query": query,
                     "space_id": space_id,
                 },
-                search_perform_params.SearchPerformParams,
+                search_hybrid_params.SearchHybridParams,
             ),
             options=make_request_options(
                 extra_headers=extra_headers, extra_query=extra_query, extra_body=extra_body, timeout=timeout
@@ -251,11 +159,8 @@ class SearchResourceWithRawResponse:
     def __init__(self, search: SearchResource) -> None:
         self._search = search
 
-        self.get = to_raw_response_wrapper(
-            search.get,
-        )
-        self.perform = to_raw_response_wrapper(
-            search.perform,
+        self.hybrid = to_raw_response_wrapper(
+            search.hybrid,
         )
 
 
@@ -263,11 +168,8 @@ class AsyncSearchResourceWithRawResponse:
     def __init__(self, search: AsyncSearchResource) -> None:
         self._search = search
 
-        self.get = async_to_raw_response_wrapper(
-            search.get,
-        )
-        self.perform = async_to_raw_response_wrapper(
-            search.perform,
+        self.hybrid = async_to_raw_response_wrapper(
+            search.hybrid,
         )
 
 
@@ -275,11 +177,8 @@ class SearchResourceWithStreamingResponse:
     def __init__(self, search: SearchResource) -> None:
         self._search = search
 
-        self.get = to_streamed_response_wrapper(
-            search.get,
-        )
-        self.perform = to_streamed_response_wrapper(
-            search.perform,
+        self.hybrid = to_streamed_response_wrapper(
+            search.hybrid,
         )
 
 
@@ -287,9 +186,6 @@ class AsyncSearchResourceWithStreamingResponse:
     def __init__(self, search: AsyncSearchResource) -> None:
         self._search = search
 
-        self.get = async_to_streamed_response_wrapper(
-            search.get,
-        )
-        self.perform = async_to_streamed_response_wrapper(
-            search.perform,
+        self.hybrid = async_to_streamed_response_wrapper(
+            search.hybrid,
         )

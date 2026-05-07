@@ -4,11 +4,11 @@ from __future__ import annotations
 
 from typing_extensions import Required, TypedDict
 
-__all__ = ["SearchGetParams"]
+__all__ = ["SearchHybridParams"]
 
 
-class SearchGetParams(TypedDict, total=False):
-    q: Required[str]
+class SearchHybridParams(TypedDict, total=False):
+    query: Required[str]
     """The search query text"""
 
     space_id: Required[int]

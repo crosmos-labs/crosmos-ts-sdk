@@ -3,12 +3,12 @@
 from typing import Dict, List, Optional
 from datetime import datetime
 
-from ..._models import BaseModel
+from .._models import BaseModel
 
-__all__ = ["V1GetJobStatusResponse"]
+__all__ = ["JobGetStatusResponse"]
 
 
-class V1GetJobStatusResponse(BaseModel):
+class JobGetStatusResponse(BaseModel):
     created_at: datetime
 
     job_id: str

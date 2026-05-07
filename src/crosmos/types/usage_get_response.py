@@ -3,9 +3,9 @@
 from typing import List
 from datetime import date
 
-from ..._models import BaseModel
+from .._models import BaseModel
 
-__all__ = ["V1GetUsageResponse", "Space"]
+__all__ = ["UsageGetResponse", "Space"]
 
 
 class Space(BaseModel):
@@ -18,7 +18,7 @@ class Space(BaseModel):
     tokens_ingested: int
 
 
-class V1GetUsageResponse(BaseModel):
+class UsageGetResponse(BaseModel):
     """Aggregated usage response."""
 
     period_end: date
