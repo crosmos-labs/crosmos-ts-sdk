@@ -65,8 +65,6 @@ export interface Source {
 
   extraction_status: string;
 
-  sequence: number;
-
   space_id: string;
 
   token_count: number;
@@ -96,8 +94,6 @@ export namespace SourceList {
     created_at: string;
 
     extraction_status: string;
-
-    sequence: number;
 
     space_id: string;
 
@@ -167,11 +163,6 @@ export namespace SourceIngestParams {
      * Optional speaker role (e.g. 'user', 'assistant')
      */
     role?: string | null;
-
-    /**
-     * Order within the batch (0-indexed)
-     */
-    sequence?: number;
   }
 }
 

@@ -103,7 +103,6 @@ describe('resource sources', () => {
           content_type: 'content_type',
           meta: { foo: 'bar' },
           role: 'role',
-          sequence: 0,
         },
       ],
       space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
