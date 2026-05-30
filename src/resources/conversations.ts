@@ -18,7 +18,7 @@ export class Conversations extends APIResource {
 export interface IngestConversation {
   job_id: string;
 
-  source_ids: Array<string>;
+  source_id: string;
 
   status?: string;
 }
