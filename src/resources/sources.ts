@@ -44,6 +44,23 @@ export class Sources extends APIResource {
   ingest(body: SourceIngestParams, options?: RequestOptions): APIPromise<IngestAccepted> {
     return this._client.post('/api/v1/sources', { body, ...options });
   }
+
+  /**
+   * Update the read scope of a source and re-classify its derived memories and
+   * edges. Setting `visibility` to `private` un-publishes org-shared content.
+   */
+  updateVisibility(
+    sourceUuid: string,
+    params: SourceUpdateVisibilityParams,
+    options?: RequestOptions,
+  ): APIPromise<SourceVisibility> {
+    const { space_uuid, ...body } = params;
+    return this._client.patch(path`/api/v1/sources/${sourceUuid}/visibility`, {
+      query: { space_uuid },
+      body,
+      ...options,
+    });
+  }
 }
 
 export interface IngestAccepted {
@@ -64,8 +81,6 @@ export interface Source {
   created_at: string;
 
   extraction_status: string;
-
-  sequence: number;
 
   space_id: string;
 
@@ -96,8 +111,6 @@ export namespace SourceList {
     created_at: string;
 
     extraction_status: string;
-
-    sequence: number;
 
     space_id: string;
 
@@ -169,10 +182,39 @@ export namespace SourceIngestParams {
     role?: string | null;
 
     /**
-     * Order within the batch (0-indexed)
+     * Read scope: 'private' (gated by the visibility graph) or 'org' (readable by
+     * everyone in the org)
      */
-    sequence?: number;
+    visibility?: 'private' | 'org';
   }
+}
+
+export interface SourceVisibility {
+  id: string;
+
+  /**
+   * Derived edges re-classified
+   */
+  edges_updated: number;
+
+  /**
+   * Derived memories re-classified
+   */
+  memories_updated: number;
+
+  visibility: 'private' | 'org';
+}
+
+export interface SourceUpdateVisibilityParams {
+  /**
+   * Memory space the source belongs to (query param).
+   */
+  space_uuid: string;
+
+  /**
+   * New read scope. 'private' un-publishes org-shared content.
+   */
+  visibility: 'private' | 'org';
 }
 
 export declare namespace Sources {
@@ -180,9 +222,11 @@ export declare namespace Sources {
     type IngestAccepted as IngestAccepted,
     type Source as Source,
     type SourceList as SourceList,
+    type SourceVisibility as SourceVisibility,
     type SourceListParams as SourceListParams,
     type SourceDeleteParams as SourceDeleteParams,
     type SourceGetParams as SourceGetParams,
     type SourceIngestParams as SourceIngestParams,
+    type SourceUpdateVisibilityParams as SourceUpdateVisibilityParams,
   };
 }
