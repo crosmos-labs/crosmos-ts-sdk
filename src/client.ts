@@ -36,6 +36,26 @@ import {
   MemoryList,
   MemoryListParams,
 } from './resources/memories';
+import {
+  AcceptInvite,
+  Invite,
+  InviteList,
+  InvitePreview,
+  Member,
+  MemberList,
+  Org,
+  OrgAcceptInviteParams,
+  OrgCreateInviteParams,
+  OrgDeleteMemberParams,
+  OrgListParams,
+  OrgListResponse,
+  OrgPreviewInviteParams,
+  OrgRevokeInviteParams,
+  OrgSetActiveParams,
+  OrgUpdateMemberParams,
+  Orgs,
+  SetActiveOrg,
+} from './resources/orgs';
 import { Search, SearchHybridParams, SearchResource } from './resources/search';
 import {
   IngestAccepted,
@@ -45,10 +65,35 @@ import {
   SourceIngestParams,
   SourceList,
   SourceListParams,
+  SourceUpdateVisibilityParams,
+  SourceVisibility,
   Sources,
 } from './resources/sources';
 import { Space, SpaceCreateParams, SpaceList, SpaceListParams, Spaces } from './resources/spaces';
 import { Usage, UsageGetParams, UsageResource } from './resources/usage';
+import {
+  Grant,
+  GrantImpact,
+  GrantList,
+  Group,
+  GroupList,
+  GroupMember,
+  GroupMemberList,
+  Visibility,
+  VisibilityAddGroupMemberParams,
+  VisibilityCreateGrantParams,
+  VisibilityCreateGroupParams,
+  VisibilityDeleteGrantParams,
+  VisibilityDeleteGroupParams,
+  VisibilityListGroupMembersParams,
+  VisibilityPreviewParams,
+  VisibilityPreviewResponse,
+  VisibilityRemoveGroupMemberParams,
+  VisibilitySettings,
+  VisibilityUpdateGroupParams,
+  VisibilityUpdateSettingsParams,
+  VisiblePrincipal,
+} from './resources/visibility';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -767,6 +812,8 @@ export class Crosmos {
   memories: API.Memories = new API.Memories(this);
   entities: API.Entities = new API.Entities(this);
   conversations: API.Conversations = new API.Conversations(this);
+  orgs: API.Orgs = new API.Orgs(this);
+  visibility: API.Visibility = new API.Visibility(this);
   jobs: API.Jobs = new API.Jobs(this);
   usage: API.UsageResource = new API.UsageResource(this);
   health: API.Health = new API.Health(this);
@@ -778,6 +825,8 @@ Crosmos.Sources = Sources;
 Crosmos.Memories = Memories;
 Crosmos.Entities = Entities;
 Crosmos.Conversations = Conversations;
+Crosmos.Orgs = Orgs;
+Crosmos.Visibility = Visibility;
 Crosmos.Jobs = Jobs;
 Crosmos.UsageResource = UsageResource;
 Crosmos.Health = Health;
@@ -800,14 +849,61 @@ export declare namespace Crosmos {
   };
 
   export {
+    Orgs as Orgs,
+    type Org as Org,
+    type OrgListResponse as OrgListResponse,
+    type SetActiveOrg as SetActiveOrg,
+    type Member as Member,
+    type MemberList as MemberList,
+    type Invite as Invite,
+    type InviteList as InviteList,
+    type AcceptInvite as AcceptInvite,
+    type InvitePreview as InvitePreview,
+    type OrgListParams as OrgListParams,
+    type OrgSetActiveParams as OrgSetActiveParams,
+    type OrgUpdateMemberParams as OrgUpdateMemberParams,
+    type OrgDeleteMemberParams as OrgDeleteMemberParams,
+    type OrgCreateInviteParams as OrgCreateInviteParams,
+    type OrgRevokeInviteParams as OrgRevokeInviteParams,
+    type OrgAcceptInviteParams as OrgAcceptInviteParams,
+    type OrgPreviewInviteParams as OrgPreviewInviteParams,
+  };
+
+  export {
     Sources as Sources,
     type IngestAccepted as IngestAccepted,
     type Source as Source,
     type SourceList as SourceList,
+    type SourceVisibility as SourceVisibility,
     type SourceListParams as SourceListParams,
     type SourceDeleteParams as SourceDeleteParams,
     type SourceGetParams as SourceGetParams,
     type SourceIngestParams as SourceIngestParams,
+    type SourceUpdateVisibilityParams as SourceUpdateVisibilityParams,
+  };
+
+  export {
+    Visibility as Visibility,
+    type Group as Group,
+    type GroupList as GroupList,
+    type GroupMember as GroupMember,
+    type GroupMemberList as GroupMemberList,
+    type Grant as Grant,
+    type GrantList as GrantList,
+    type VisiblePrincipal as VisiblePrincipal,
+    type GrantImpact as GrantImpact,
+    type VisibilityPreviewResponse as VisibilityPreviewResponse,
+    type VisibilitySettings as VisibilitySettings,
+    type VisibilityCreateGroupParams as VisibilityCreateGroupParams,
+    type VisibilityUpdateGroupParams as VisibilityUpdateGroupParams,
+    type VisibilityDeleteGroupParams as VisibilityDeleteGroupParams,
+    type VisibilityListGroupMembersParams as VisibilityListGroupMembersParams,
+    type VisibilityAddGroupMemberParams as VisibilityAddGroupMemberParams,
+    type VisibilityRemoveGroupMemberParams as VisibilityRemoveGroupMemberParams,
+    type VisibilityCreateGrantParams as VisibilityCreateGrantParams,
+    type VisibilityDeleteGrantParams as VisibilityDeleteGrantParams,
+    type VisibilityPreviewParams as VisibilityPreviewParams,
+    type VisibilityUpdateSettingsParams as VisibilityUpdateSettingsParams,
   };
 
   export {

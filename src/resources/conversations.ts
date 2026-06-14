@@ -18,7 +18,7 @@ export class Conversations extends APIResource {
 export interface IngestConversation {
   job_id: string;
 
-  source_ids: Array<string>;
+  source_id: string;
 
   status?: string;
 }
@@ -48,6 +48,12 @@ export interface ConversationIngestParams {
    * Session identifier. Auto-generated if not provided.
    */
   session_id?: string | null;
+
+  /**
+   * Read scope: 'private' (gated by the visibility graph) or 'org' (readable by
+   * everyone in the org)
+   */
+  visibility?: 'private' | 'org';
 }
 
 export namespace ConversationIngestParams {

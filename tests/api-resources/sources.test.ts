@@ -103,10 +103,18 @@ describe('resource sources', () => {
           content_type: 'content_type',
           meta: { foo: 'bar' },
           role: 'role',
-          sequence: 0,
+          visibility: 'private',
         },
       ],
       space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+    });
+  });
+
+  // Mock server tests are disabled
+  test.skip('updateVisibility: required and optional params', async () => {
+    const response = await client.sources.updateVisibility('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
+      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+      visibility: 'private',
     });
   });
 });

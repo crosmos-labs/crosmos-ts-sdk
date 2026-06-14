@@ -46,6 +46,17 @@ export namespace Search {
     score: number;
 
     /**
+     * External id of the user who ingested this memory. Null for org-level memories
+     * not attributable to a single user.
+     */
+    owner_id?: string | null;
+
+    /**
+     * Display name of the owning user, for attribution in shared orgs.
+     */
+    owner_name?: string | null;
+
+    /**
      * Original source text the memory was extracted from
      */
     source?: string | null;
