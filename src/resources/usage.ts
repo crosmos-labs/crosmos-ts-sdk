@@ -6,47 +6,32 @@ import { RequestOptions } from '../internal/request-options';
 
 export class UsageResource extends APIResource {
   /**
-   * Return org-level usage for the active billing period and plan limits.
+   * Get org usage
    */
   get(query: UsageGetParams | null | undefined = {}, options?: RequestOptions): APIPromise<Usage> {
     return this._client.get('/api/v1/usage', { query, ...options });
   }
 }
 
-/**
- * Aggregated org-level usage and current plan limits.
- */
 export interface Usage {
   period_end: string;
 
   period_start: string;
 
-  plan: string;
+  plan: 'free' | 'developer' | 'pro' | 'enterprise';
 
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   queries: Usage.Queries;
 
   rate_limit_per_day: number;
 
   rate_limit_rpm: number;
 
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   spaces: Usage.Spaces;
 
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   tokens: Usage.Tokens;
 }
 
 export namespace Usage {
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   export interface Queries {
     limit: number;
 
@@ -55,9 +40,6 @@ export namespace Usage {
     used: number;
   }
 
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   export interface Spaces {
     limit: number;
 
@@ -66,9 +48,6 @@ export namespace Usage {
     used: number;
   }
 
-  /**
-   * Used / limit / remaining triple. `-1` limit means unlimited.
-   */
   export interface Tokens {
     limit: number;
 
@@ -79,15 +58,9 @@ export namespace Usage {
 }
 
 export interface UsageGetParams {
-  /**
-   * End date (defaults to today)
-   */
-  end_date?: string | null;
+  end_date?: string;
 
-  /**
-   * Start date (defaults to 1st of current month)
-   */
-  start_date?: string | null;
+  start_date?: string;
 }
 
 export declare namespace UsageResource {

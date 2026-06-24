@@ -6,9 +6,9 @@ import { RequestOptions } from '../internal/request-options';
 
 export class Conversations extends APIResource {
   /**
-   * Ingest a multi-turn conversation into the knowledge graph.
-   *
-   * - Each turn is converted into a source with provenance metadata.
+   * Ingest a multi-turn conversation. The conversation is stored as a single source
+   * and segmented at ingestion into windows of 4 turns; each window is extracted
+   * independently with the prior window as lookback context for pronoun resolution.
    */
   ingest(body: ConversationIngestParams, options?: RequestOptions): APIPromise<IngestConversation> {
     return this._client.post('/api/v1/conversations', { body, ...options });
@@ -20,46 +20,27 @@ export interface IngestConversation {
 
   source_id: string;
 
-  status?: string;
+  status: 'pending';
 }
 
 export interface ConversationIngestParams {
-  /**
-   * Ordered conversation messages
-   */
   messages: Array<ConversationIngestParams.Message>;
 
-  /**
-   * Memory space to ingest into
-   */
   space_id: string;
 
-  /**
-   * Optional metadata attached to all created sources
-   */
   meta?: { [key: string]: unknown } | null;
 
-  /**
-   * ISO date string for when the session occurred
-   */
-  session_date?: string | null;
+  session_date?: string;
 
-  /**
-   * Session identifier. Auto-generated if not provided.
-   */
-  session_id?: string | null;
+  session_id?: string;
+
+  visibility?: 'private' | 'org';
 }
 
 export namespace ConversationIngestParams {
   export interface Message {
-    /**
-     * Message content
-     */
     content: string;
 
-    /**
-     * Speaker role (e.g. 'user', 'assistant')
-     */
     role: string;
   }
 }

@@ -26,11 +26,12 @@ describe('resource sources', () => {
     await expect(
       client.sources.list(
         {
-          content_type: 'content_type',
-          extraction_status: 'extraction_status',
+          content_type: 'x',
+          extraction_status: 'pending',
           limit: 1,
           offset: 0,
           space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+          space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
         },
         { path: '/_stainless_unknown_path' },
       ),
@@ -38,10 +39,8 @@ describe('resource sources', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('delete: only required params', async () => {
-    const responsePromise = client.sources.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('delete', async () => {
+    const responsePromise = client.sources.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -52,17 +51,23 @@ describe('resource sources', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('delete: required and optional params', async () => {
-    const response = await client.sources.delete('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('delete: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sources.delete(
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        {
+          space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+          space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Crosmos.NotFoundError);
   });
 
   // Mock server tests are disabled
-  test.skip('get: only required params', async () => {
-    const responsePromise = client.sources.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('get', async () => {
+    const responsePromise = client.sources.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -73,10 +78,18 @@ describe('resource sources', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('get: required and optional params', async () => {
-    const response = await client.sources.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('get: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.sources.get(
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        {
+          space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+          space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Crosmos.NotFoundError);
   });
 
   // Mock server tests are disabled
@@ -100,9 +113,10 @@ describe('resource sources', () => {
       sources: [
         {
           content: 'x',
-          content_type: 'content_type',
+          content_type: 'text',
           meta: { foo: 'bar' },
-          role: 'role',
+          role: 'x',
+          visibility: 'private',
         },
       ],
       space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',

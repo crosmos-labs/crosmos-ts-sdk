@@ -7,31 +7,51 @@ import { path } from '../internal/utils/path';
 
 export class Jobs extends APIResource {
   /**
-   * Poll for ingestion job status.
+   * Get Job
    */
-  getStatus(jobID: string, options?: RequestOptions): APIPromise<Job> {
+  getStatus(jobID: string, options?: RequestOptions): APIPromise<JobGetStatusResponse> {
     return this._client.get(path`/api/v1/jobs/${jobID}`, options);
   }
 }
 
-export interface Job {
+export interface JobGetStatusResponse {
+  completed_at: string | null;
+
   created_at: string;
+
+  error_message: string | null;
 
   job_id: string;
 
+  result: JobGetStatusResponse.Result | null;
+
   source_ids: Array<number>;
 
-  status: string;
+  started_at: string | null;
 
-  completed_at?: string | null;
+  status: 'pending' | 'processing' | 'completed' | 'partial' | 'failed' | 'cancelled';
+}
 
-  error_message?: string | null;
+export namespace JobGetStatusResponse {
+  export interface Result {
+    edge_count: number;
 
-  result?: { [key: string]: unknown } | null;
+    entity_count: number;
 
-  started_at?: string | null;
+    failed_source_ids: Array<number>;
+
+    memory_count: number;
+
+    source_ids: Array<number>;
+
+    tokens_used: number;
+
+    error_message?: string;
+
+    source_errors?: { [key: string]: string };
+  }
 }
 
 export declare namespace Jobs {
-  export { type Job as Job };
+  export { type JobGetStatusResponse as JobGetStatusResponse };
 }

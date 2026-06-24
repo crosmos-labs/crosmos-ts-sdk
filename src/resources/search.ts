@@ -6,7 +6,9 @@ import { RequestOptions } from '../internal/request-options';
 
 export class SearchResource extends APIResource {
   /**
-   * Perform a search for relevant memories within a specified memory space.
+   * Search for relevant memories within a memory space using hybrid retrieval
+   * (semantic + keyword + graph + temporal), RRF fusion, cross-encoder reranking,
+   * and recency/temporal boosting.
    */
   hybrid(body: SearchHybridParams, options?: RequestOptions): APIPromise<Search> {
     return this._client.post('/api/v1/search', { body, ...options });
@@ -17,16 +19,6 @@ export interface Search {
   candidates: Array<Search.Candidate>;
 
   query: string;
-
-  /**
-   * Search execution time in milliseconds
-   */
-  took_ms: number;
-
-  /**
-   * Total number of candidates returned
-   */
-  total: number;
 }
 
 export namespace Search {
@@ -41,13 +33,10 @@ export namespace Search {
 
     memory_type: string;
 
-    recorded_at: string;
+    owner_name: string | null;
 
     score: number;
 
-    /**
-     * Original source text the memory was extracted from
-     */
     source?: string | null;
   }
 }

@@ -7,16 +7,20 @@ import { path } from '../internal/utils/path';
 
 export class Entities extends APIResource {
   /**
-   * List Entities
+   * List entities
    */
-  list(query: EntityListParams, options?: RequestOptions): APIPromise<EntityList> {
+  list(query: EntityListParams | null | undefined = {}, options?: RequestOptions): APIPromise<EntityList> {
     return this._client.get('/api/v1/entities', { query, ...options });
   }
 
   /**
-   * Get Entity
+   * Get entity
    */
-  get(entityUuid: string, query: EntityGetParams, options?: RequestOptions): APIPromise<EntityDetail> {
+  get(
+    entityUuid: string,
+    query: EntityGetParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<EntityDetail> {
     return this._client.get(path`/api/v1/entities/${entityUuid}`, { query, ...options });
   }
 }
@@ -26,9 +30,6 @@ export interface Entity {
 
   created_at: string;
 
-  /**
-   * Total incoming + outgoing edges
-   */
   edge_count: number;
 
   entity_type: string | null;
@@ -40,28 +41,8 @@ export interface Entity {
   updated_at: string;
 }
 
-export interface EntityDetail {
-  id: string;
-
-  created_at: string;
-
-  /**
-   * Total incoming + outgoing edges
-   */
-  edge_count: number;
-
-  entity_type: string | null;
-
-  /**
-   * Recent memories mentioning this entity
-   */
+export interface EntityDetail extends Entity {
   memories: Array<EntityDetail.Memory>;
-
-  name: string;
-
-  space_id: string;
-
-  updated_at: string;
 }
 
 export namespace EntityDetail {
@@ -83,29 +64,27 @@ export interface EntityList {
 }
 
 export interface EntityListParams {
-  space_uuid: string;
-
-  /**
-   * Filter by entity type
-   */
-  entity_type?: string | null;
+  entity_type?: string;
 
   limit?: number;
 
-  offset?: number;
+  offset?: number | null;
 
   order?: 'asc' | 'desc';
 
-  /**
-   * Search entities by name
-   */
-  q?: string | null;
+  q?: string;
 
   sort_by?: 'name' | 'edge_count' | 'created_at';
+
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface EntityGetParams {
-  space_uuid: string;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export declare namespace Entities {
