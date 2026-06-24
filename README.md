@@ -31,9 +31,7 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Crosmos from 'crosmos';
 
-const client = new Crosmos({
-  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
-});
+const client = new Crosmos();
 
 const search = await client.search.hybrid({
   query: 'What is my primary language?',
@@ -51,9 +49,7 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Crosmos from 'crosmos';
 
-const client = new Crosmos({
-  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
-});
+const client = new Crosmos();
 
 const params: Crosmos.SearchHybridParams = {
   query: 'What is my primary language?',
@@ -110,6 +106,7 @@ You can use the `maxRetries` option to configure or disable this:
 ```js
 // Configure the default for all requests:
 const client = new Crosmos({
+  apiKey: 'My API Key',
   maxRetries: 0, // default is 2
 });
 
@@ -127,6 +124,7 @@ Requests time out after 1 minute by default. You can configure this with a `time
 ```ts
 // Configure the default for all requests:
 const client = new Crosmos({
+  apiKey: 'My API Key',
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 

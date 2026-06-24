@@ -44,9 +44,16 @@ describe('resource spaces', () => {
   // Mock server tests are disabled
   test.skip('list: request options and params are passed correctly', async () => {
     // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
-    await expect(client.spaces.list({ name: 'name' }, { path: '/_stainless_unknown_path' })).rejects.toThrow(
-      Crosmos.NotFoundError,
-    );
+    await expect(
+      client.spaces.list(
+        {
+          limit: 1,
+          name: 'x',
+          offset: 0,
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Crosmos.NotFoundError);
   });
 
   // Mock server tests are disabled

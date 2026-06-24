@@ -1,4 +1,4 @@
-configured_endpoints: 18
-openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/crosmos/crosmos-b8cac9156b11ccf40e836ed269a3da15c06a25ffa9e0b70be6657bddd1f29946.yml
-openapi_spec_hash: d81bbb963795efa93fa25d40e872e6f0
+configured_endpoints: 17
+openapi_spec_url: https://storage.googleapis.com/stainless-sdk-openapi-specs/crosmos/crosmos-73a068159ed1b24fe4e65ac3fae760fa64ddd4d0af8c1b2ccb6e47cd6e602e82.yml
+openapi_spec_hash: f2e753f89bae6891fff67c2a9c23ef69
 config_hash: 1ce6c4313849274f7ee2a34023bed1f4

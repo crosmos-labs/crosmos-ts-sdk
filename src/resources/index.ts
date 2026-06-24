@@ -9,8 +9,8 @@ export {
   type EntityListParams,
   type EntityGetParams,
 } from './entities';
-export { Health, type HealthCheckResponse } from './health';
-export { Jobs, type Job } from './jobs';
+export { Health } from './health';
+export { Jobs, type JobGetStatusResponse } from './jobs';
 export {
   Memories,
   type Memory,
@@ -30,5 +30,12 @@ export {
   type SourceGetParams,
   type SourceIngestParams,
 } from './sources';
-export { Spaces, type Space, type SpaceList, type SpaceCreateParams, type SpaceListParams } from './spaces';
+export {
+  Spaces,
+  type SpaceList,
+  type SpaceCreateResponse,
+  type SpaceGetResponse,
+  type SpaceCreateParams,
+  type SpaceListParams,
+} from './spaces';
 export { UsageResource, type Usage, type UsageGetParams } from './usage';

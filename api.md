@@ -2,15 +2,16 @@
 
 Types:
 
-- <code><a href="./src/resources/spaces.ts">Space</a></code>
 - <code><a href="./src/resources/spaces.ts">SpaceList</a></code>
+- <code><a href="./src/resources/spaces.ts">SpaceCreateResponse</a></code>
+- <code><a href="./src/resources/spaces.ts">SpaceGetResponse</a></code>
 
 Methods:
 
-- <code title="post /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">create</a>({ ...params }) -> Space</code>
+- <code title="post /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">create</a>({ ...params }) -> SpaceCreateResponse</code>
 - <code title="get /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">list</a>({ ...params }) -> SpaceList</code>
 - <code title="delete /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">delete</a>(spaceUuid) -> void</code>
-- <code title="get /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">get</a>(spaceUuid) -> Space</code>
+- <code title="get /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">get</a>(spaceUuid) -> SpaceGetResponse</code>
 
 # Search
 
@@ -77,11 +78,11 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/jobs.ts">Job</a></code>
+- <code><a href="./src/resources/jobs.ts">JobGetStatusResponse</a></code>
 
 Methods:
 
-- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">getStatus</a>(jobID) -> Job</code>
+- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">getStatus</a>(jobID) -> JobGetStatusResponse</code>
 
 # Usage
 
@@ -94,11 +95,3 @@ Methods:
 - <code title="get /api/v1/usage">client.usage.<a href="./src/resources/usage.ts">get</a>({ ...params }) -> Usage</code>
 
 # Health
-
-Types:
-
-- <code><a href="./src/resources/health.ts">HealthCheckResponse</a></code>
-
-Methods:
-
-- <code title="get /health">client.health.<a href="./src/resources/health.ts">check</a>() -> HealthCheckResponse</code>

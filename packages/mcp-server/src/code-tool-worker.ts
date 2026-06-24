@@ -125,7 +125,6 @@ const fuse = new Fuse(
     'client.conversations.ingest',
     'client.jobs.getStatus',
     'client.usage.get',
-    'client.health.check',
   ],
   { threshold: 1, shouldSort: true },
 );

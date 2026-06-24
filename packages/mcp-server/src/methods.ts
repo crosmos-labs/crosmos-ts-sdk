@@ -112,12 +112,6 @@ export const sdkMethods: SdkMethod[] = [
     httpMethod: 'get',
     httpPath: '/api/v1/usage',
   },
-  {
-    clientCallName: 'client.health.check',
-    fullyQualifiedName: 'health.check',
-    httpMethod: 'get',
-    httpPath: '/health',
-  },
 ];
 
 function allowedMethodsForCodeTool(options: McpOptions | undefined): SdkMethod[] | undefined {

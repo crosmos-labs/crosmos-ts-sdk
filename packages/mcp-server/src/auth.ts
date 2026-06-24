@@ -5,26 +5,7 @@ import { ClientOptions } from 'crosmos';
 import { McpOptions } from './options';
 
 export const parseClientAuthHeaders = (req: IncomingMessage, required?: boolean): Partial<ClientOptions> => {
-  if (req.headers.authorization) {
-    const scheme = req.headers.authorization.split(' ')[0]!;
-    const value = req.headers.authorization.slice(scheme.length + 1);
-    switch (scheme) {
-      case 'Bearer':
-        return { apiKey: req.headers.authorization.slice('Bearer '.length) };
-      default:
-        throw new Error(
-          'Unsupported authorization scheme. Expected the "Authorization" header to be a supported scheme (Bearer).',
-        );
-    }
-  } else if (required) {
-    throw new Error('Missing required Authorization header; see WWW-Authenticate header for details.');
-  }
-
-  const apiKey =
-    Array.isArray(req.headers['x-crosmos-api-key']) ?
-      req.headers['x-crosmos-api-key'][0]
-    : req.headers['x-crosmos-api-key'];
-  return { apiKey };
+  return {};
 };
 
 export const getStainlessApiKey = (req: IncomingMessage, mcpOptions: McpOptions): string | undefined => {

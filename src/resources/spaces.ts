@@ -8,24 +8,22 @@ import { path } from '../internal/utils/path';
 
 export class Spaces extends APIResource {
   /**
-   * Create a new memory space within the caller's active organization.
+   * Create memory space
    */
-  create(body: SpaceCreateParams, options?: RequestOptions): APIPromise<Space> {
+  create(body: SpaceCreateParams, options?: RequestOptions): APIPromise<SpaceCreateResponse> {
     return this._client.post('/api/v1/spaces', { body, ...options });
   }
 
   /**
-   * List memory spaces in the user's active organization.
-   *
-   * Pass `?name=` to resolve a space by its human-readable name (useful for
-   * LLM/plugin flows that have a name but not the UUID).
+   * Pass ?name= to resolve a space by its name (returns 0 or 1 since names are
+   * unique per org).
    */
   list(query: SpaceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<SpaceList> {
     return this._client.get('/api/v1/spaces', { query, ...options });
   }
 
   /**
-   * Delete a memory space and all its contents (cascading).
+   * Delete memory space (owner/admin only)
    */
   delete(spaceUuid: string, options?: RequestOptions): APIPromise<void> {
     return this._client.delete(path`/api/v1/spaces/${spaceUuid}`, {
@@ -35,14 +33,38 @@ export class Spaces extends APIResource {
   }
 
   /**
-   * Get a memory space by UUID.
+   * Get memory space
    */
-  get(spaceUuid: string, options?: RequestOptions): APIPromise<Space> {
+  get(spaceUuid: string, options?: RequestOptions): APIPromise<SpaceGetResponse> {
     return this._client.get(path`/api/v1/spaces/${spaceUuid}`, options);
   }
 }
 
-export interface Space {
+export interface SpaceList {
+  spaces: Array<SpaceList.Space>;
+
+  total: number;
+}
+
+export namespace SpaceList {
+  export interface Space {
+    id: string;
+
+    created_at: string;
+
+    description: string | null;
+
+    meta: { [key: string]: unknown } | null;
+
+    name: string;
+
+    org_id: string;
+
+    updated_at: string;
+  }
+}
+
+export interface SpaceCreateResponse {
   id: string;
 
   created_at: string;
@@ -58,10 +80,20 @@ export interface Space {
   updated_at: string;
 }
 
-export interface SpaceList {
-  spaces: Array<Space>;
+export interface SpaceGetResponse {
+  id: string;
 
-  total: number;
+  created_at: string;
+
+  description: string | null;
+
+  meta: { [key: string]: unknown } | null;
+
+  name: string;
+
+  org_id: string;
+
+  updated_at: string;
 }
 
 export interface SpaceCreateParams {
@@ -73,17 +105,18 @@ export interface SpaceCreateParams {
 }
 
 export interface SpaceListParams {
-  /**
-   * Exact-match filter on space name within the active org. Returns 0 or 1 spaces
-   * (names are unique per org).
-   */
-  name?: string | null;
+  limit?: number;
+
+  name?: string;
+
+  offset?: number | null;
 }
 
 export declare namespace Spaces {
   export {
-    type Space as Space,
     type SpaceList as SpaceList,
+    type SpaceCreateResponse as SpaceCreateResponse,
+    type SpaceGetResponse as SpaceGetResponse,
     type SpaceCreateParams as SpaceCreateParams,
     type SpaceListParams as SpaceListParams,
   };

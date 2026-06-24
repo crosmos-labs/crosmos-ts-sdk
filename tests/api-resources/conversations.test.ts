@@ -29,8 +29,9 @@ describe('resource conversations', () => {
       messages: [{ content: 'x', role: 'x' }],
       space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
       meta: { foo: 'bar' },
-      session_date: 'session_date',
-      session_id: 'session_id',
+      session_date: 'x',
+      session_id: 'x',
+      visibility: 'private',
     });
   });
 });
