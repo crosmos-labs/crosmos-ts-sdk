@@ -26,8 +26,8 @@ import {
   EntityList,
   EntityListParams,
 } from './resources/entities';
-import { Health, HealthCheckResponse } from './resources/health';
-import { Job, Jobs } from './resources/jobs';
+import { Health } from './resources/health';
+import { JobGetStatusResponse, Jobs } from './resources/jobs';
 import {
   Memories,
   Memory,
@@ -47,7 +47,14 @@ import {
   SourceListParams,
   Sources,
 } from './resources/sources';
-import { Space, SpaceCreateParams, SpaceList, SpaceListParams, Spaces } from './resources/spaces';
+import {
+  SpaceCreateParams,
+  SpaceCreateResponse,
+  SpaceGetResponse,
+  SpaceList,
+  SpaceListParams,
+  Spaces,
+} from './resources/spaces';
 import { Usage, UsageGetParams, UsageResource } from './resources/usage';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
@@ -248,10 +255,6 @@ export class Crosmos {
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
     return;
-  }
-
-  protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
-    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
   /**
@@ -680,7 +683,6 @@ export class Crosmos {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
-      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -697,11 +699,19 @@ export class Crosmos {
     return () => controller.abort();
   }
 
-  private buildBody({ options: { body, headers: rawHeaders } }: { options: FinalRequestOptions }): {
+  private buildBody({ options }: { options: FinalRequestOptions }): {
     bodyHeaders: HeadersLike;
     body: BodyInit | undefined;
   } {
+    const { body, headers: rawHeaders } = options;
     if (!body) {
+      // A resource method always passes a `body` key when its operation defines a
+      // request body, even if the caller omitted an optional body param. Keep the
+      // content-type for those, and only elide it for operations with no body at
+      // all (e.g. GET/DELETE).
+      if (body == null && 'body' in options) {
+        return this.#encoder({ body, headers: buildHeaders([rawHeaders]) });
+      }
       return { bodyHeaders: undefined, body: undefined };
     }
     const headers = buildHeaders([rawHeaders]);
@@ -787,8 +797,9 @@ export declare namespace Crosmos {
 
   export {
     Spaces as Spaces,
-    type Space as Space,
     type SpaceList as SpaceList,
+    type SpaceCreateResponse as SpaceCreateResponse,
+    type SpaceGetResponse as SpaceGetResponse,
     type SpaceCreateParams as SpaceCreateParams,
     type SpaceListParams as SpaceListParams,
   };
@@ -834,9 +845,9 @@ export declare namespace Crosmos {
     type ConversationIngestParams as ConversationIngestParams,
   };
 
-  export { Jobs as Jobs, type Job as Job };
+  export { Jobs as Jobs, type JobGetStatusResponse as JobGetStatusResponse };
 
   export { UsageResource as UsageResource, type Usage as Usage, type UsageGetParams as UsageGetParams };
 
-  export { Health as Health, type HealthCheckResponse as HealthCheckResponse };
+  export { Health as Health };
 }

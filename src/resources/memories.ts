@@ -8,28 +8,36 @@ import { path } from '../internal/utils/path';
 
 export class Memories extends APIResource {
   /**
-   * List memories in a memory space.
+   * List memories
    */
-  list(query: MemoryListParams, options?: RequestOptions): APIPromise<MemoryList> {
+  list(query: MemoryListParams | null | undefined = {}, options?: RequestOptions): APIPromise<MemoryList> {
     return this._client.get('/api/v1/memories', { query, ...options });
   }
 
   /**
-   * Soft-delete a memory and cascade to all edges whose provenance is this memory.
+   * Forget memory
    */
-  delete(memoryUuid: string, params: MemoryDeleteParams, options?: RequestOptions): APIPromise<void> {
-    const { space_uuid } = params;
+  delete(
+    memoryUuid: string,
+    params: MemoryDeleteParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<void> {
+    const { space_id, space_uuid } = params ?? {};
     return this._client.delete(path`/api/v1/memories/${memoryUuid}`, {
-      query: { space_uuid },
+      query: { space_id, space_uuid },
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
     });
   }
 
   /**
-   * Get a memory by UUID.
+   * Get memory
    */
-  get(memoryUuid: string, query: MemoryGetParams, options?: RequestOptions): APIPromise<Memory> {
+  get(
+    memoryUuid: string,
+    query: MemoryGetParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Memory> {
     return this._client.get(path`/api/v1/memories/${memoryUuid}`, { query, ...options });
   }
 }
@@ -65,25 +73,31 @@ export interface MemoryList {
 }
 
 export interface MemoryListParams {
-  space_uuid: string;
-
   limit?: number;
 
-  memory_type?: 'viewpoint' | 'semantic' | 'episode' | null;
+  memory_type?: 'viewpoint' | 'semantic' | 'episode' | 'inference';
 
-  offset?: number;
+  offset?: number | null;
 
   order?: 'asc' | 'desc';
 
   sort_by?: 'created_at' | 'importance_score' | 'event_time' | 'last_accessed_at' | 'access_frequency';
+
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface MemoryDeleteParams {
-  space_uuid: string;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface MemoryGetParams {
-  space_uuid: string;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export declare namespace Memories {

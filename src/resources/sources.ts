@@ -8,38 +8,42 @@ import { path } from '../internal/utils/path';
 
 export class Sources extends APIResource {
   /**
-   * List sources in the caller's org, sorted by created_at desc.
-   *
-   * If space_id is provided, returns only sources in that space. Otherwise, returns
-   * sources across all spaces in the org.
+   * List Sources
    */
   list(query: SourceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<SourceList> {
     return this._client.get('/api/v1/sources', { query, ...options });
   }
 
   /**
-   * Delete a source document by UUID.
+   * Delete Source
    */
-  delete(sourceUuid: string, params: SourceDeleteParams, options?: RequestOptions): APIPromise<void> {
-    const { space_uuid } = params;
+  delete(
+    sourceUuid: string,
+    params: SourceDeleteParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<void> {
+    const { space_id, space_uuid } = params ?? {};
     return this._client.delete(path`/api/v1/sources/${sourceUuid}`, {
-      query: { space_uuid },
+      query: { space_id, space_uuid },
       ...options,
       headers: buildHeaders([{ Accept: '*/*' }, options?.headers]),
     });
   }
 
   /**
-   * Get a source by UUID.
+   * Get Source
    */
-  get(sourceUuid: string, query: SourceGetParams, options?: RequestOptions): APIPromise<Source> {
+  get(
+    sourceUuid: string,
+    query: SourceGetParams | null | undefined = {},
+    options?: RequestOptions,
+  ): APIPromise<Source> {
     return this._client.get(path`/api/v1/sources/${sourceUuid}`, { query, ...options });
   }
 
   /**
-   * Upload raw content sources for ingestion into the knowledge graph. Each source
-   * is a discrete content payload (text, markdown.) that will be processed by the
-   * extraction pipeline.
+   * Enqueue a batch of sources for asynchronous ingestion. Fire-and-forget: returns
+   * 202 with a job_id you can poll via GET /jobs/{job_id}.
    */
   ingest(body: SourceIngestParams, options?: RequestOptions): APIPromise<IngestAccepted> {
     return this._client.post('/api/v1/sources', { body, ...options });
@@ -49,9 +53,22 @@ export class Sources extends APIResource {
 export interface IngestAccepted {
   job_id: string;
 
+  /**
+   * One entry per job the request was split into.
+   */
+  jobs: Array<IngestAccepted.Job>;
+
   source_ids: Array<string>;
 
-  status?: string;
+  status: 'pending';
+}
+
+export namespace IngestAccepted {
+  export interface Job {
+    job_id: string;
+
+    source_ids: Array<string>;
+  }
 }
 
 export interface Source {
@@ -63,115 +80,102 @@ export interface Source {
 
   created_at: string;
 
-  extraction_status: string;
+  extraction_status: 'pending' | 'processing' | 'completed' | 'failed';
 
-  sequence: number;
+  meta: { [key: string]: unknown } | null;
 
   space_id: string;
 
   token_count: number;
 
   updated_at: string;
-
-  meta?: unknown;
 }
 
 export interface SourceList {
   count: number;
 
-  sources: Array<SourceList.UnionMember0> | Array<Source>;
+  sources: Array<SourceList.Source>;
 
-  /**
-   * Total matching sources (for pagination)
-   */
-  total?: number;
+  total: number;
 }
 
 export namespace SourceList {
-  export interface UnionMember0 {
+  export interface Source {
     id: string;
+
+    content_preview: string;
 
     content_type: string;
 
     created_at: string;
 
-    extraction_status: string;
+    extraction_status: 'pending' | 'processing' | 'completed' | 'failed';
 
-    sequence: number;
+    meta: { [key: string]: unknown } | null;
 
     space_id: string;
 
     token_count: number;
 
     updated_at: string;
-
-    /**
-     * First 200 chars of source content for list views
-     */
-    content_preview?: string;
-
-    meta?: unknown;
   }
 }
 
 export interface SourceListParams {
-  content_type?: string | null;
+  content_type?: string;
 
-  extraction_status?: string | null;
+  extraction_status?: 'pending' | 'processing' | 'completed' | 'failed';
 
   limit?: number;
 
-  offset?: number;
+  offset?: number | null;
 
-  space_id?: string | null;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface SourceDeleteParams {
-  space_uuid: string;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface SourceGetParams {
-  space_uuid: string;
+  space_id?: string;
+
+  space_uuid?: string;
 }
 
 export interface SourceIngestParams {
-  /**
-   * Array of source payloads to ingest
-   */
   sources: Array<SourceIngestParams.Source>;
 
-  /**
-   * Memory space to ingest into
-   */
   space_id: string;
 }
 
 export namespace SourceIngestParams {
   export interface Source {
-    /**
-     * Raw content to ingest
-     */
     content: string;
 
     /**
-     * Content MIME type: text, markdown, html, json, pdf, image, audio, video
+     * Today only `text` and `markdown` are processable.
      */
-    content_type?: string;
+    content_type?:
+      | 'text'
+      | 'markdown'
+      | 'conversation'
+      | 'html'
+      | 'json'
+      | 'pdf'
+      | 'image'
+      | 'audio'
+      | 'video';
 
-    /**
-     * Optional metadata stored with the source
-     */
     meta?: { [key: string]: unknown } | null;
 
-    /**
-     * Optional speaker role (e.g. 'user', 'assistant')
-     */
-    role?: string | null;
+    role?: string;
 
-    /**
-     * Order within the batch (0-indexed)
-     */
-    sequence?: number;
+    visibility?: 'private' | 'org';
   }
 }
 

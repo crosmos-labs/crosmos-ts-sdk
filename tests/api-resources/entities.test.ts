@@ -9,8 +9,8 @@ const client = new Crosmos({
 
 describe('resource entities', () => {
   // Mock server tests are disabled
-  test.skip('list: only required params', async () => {
-    const responsePromise = client.entities.list({ space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e' });
+  test.skip('list', async () => {
+    const responsePromise = client.entities.list();
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -21,23 +21,28 @@ describe('resource entities', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('list: required and optional params', async () => {
-    const response = await client.entities.list({
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-      entity_type: 'entity_type',
-      limit: 1,
-      offset: 0,
-      order: 'asc',
-      q: 'q',
-      sort_by: 'name',
-    });
+  test.skip('list: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.entities.list(
+        {
+          entity_type: 'entity_type',
+          limit: 1,
+          offset: 0,
+          order: 'asc',
+          q: 'q',
+          sort_by: 'name',
+          space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+          space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Crosmos.NotFoundError);
   });
 
   // Mock server tests are disabled
-  test.skip('get: only required params', async () => {
-    const responsePromise = client.entities.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('get', async () => {
+    const responsePromise = client.entities.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e');
     const rawResponse = await responsePromise.asResponse();
     expect(rawResponse).toBeInstanceOf(Response);
     const response = await responsePromise;
@@ -48,9 +53,17 @@ describe('resource entities', () => {
   });
 
   // Mock server tests are disabled
-  test.skip('get: required and optional params', async () => {
-    const response = await client.entities.get('182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e', {
-      space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
-    });
+  test.skip('get: request options and params are passed correctly', async () => {
+    // ensure the request options are being passed correctly by passing an invalid HTTP method in order to cause an error
+    await expect(
+      client.entities.get(
+        '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        {
+          space_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+          space_uuid: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
+        },
+        { path: '/_stainless_unknown_path' },
+      ),
+    ).rejects.toThrow(Crosmos.NotFoundError);
   });
 });
