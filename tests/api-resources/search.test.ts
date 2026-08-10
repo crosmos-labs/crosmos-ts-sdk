@@ -32,6 +32,7 @@ describe('resource search', () => {
       graph: true,
       include_source: true,
       limit: 1,
+      recall_id: '182bd5e5-6e1a-4fe4-a799-aa6d9a6ab26e',
       recency_bias: 0,
       rerank: true,
     });
