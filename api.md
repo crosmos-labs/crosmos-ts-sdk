@@ -2,16 +2,15 @@
 
 Types:
 
+- <code><a href="./src/resources/spaces.ts">Space</a></code>
 - <code><a href="./src/resources/spaces.ts">SpaceList</a></code>
-- <code><a href="./src/resources/spaces.ts">SpaceCreateResponse</a></code>
-- <code><a href="./src/resources/spaces.ts">SpaceGetResponse</a></code>
 
 Methods:
 
-- <code title="post /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">create</a>({ ...params }) -> SpaceCreateResponse</code>
-- <code title="get /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">list</a>({ ...params }) -> SpaceList</code>
+- <code title="post /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">create</a>({ ...params }) -> Space</code>
+- <code title="get /api/v1/spaces">client.spaces.<a href="./src/resources/spaces.ts">list</a>({ ...params }) -> SpacesSpacesOffsetPage</code>
 - <code title="delete /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">delete</a>(spaceUuid) -> void</code>
-- <code title="get /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">get</a>(spaceUuid) -> SpaceGetResponse</code>
+- <code title="get /api/v1/spaces/{space_uuid}">client.spaces.<a href="./src/resources/spaces.ts">get</a>(spaceUuid) -> Space</code>
 
 # Search
 
@@ -33,7 +32,7 @@ Types:
 
 Methods:
 
-- <code title="get /api/v1/sources">client.sources.<a href="./src/resources/sources.ts">list</a>({ ...params }) -> SourceList</code>
+- <code title="get /api/v1/sources">client.sources.<a href="./src/resources/sources.ts">list</a>({ ...params }) -> SourceListSourcesSourcesOffsetPage</code>
 - <code title="delete /api/v1/sources/{source_uuid}">client.sources.<a href="./src/resources/sources.ts">delete</a>(sourceUuid, { ...params }) -> void</code>
 - <code title="get /api/v1/sources/{source_uuid}">client.sources.<a href="./src/resources/sources.ts">get</a>(sourceUuid, { ...params }) -> Source</code>
 - <code title="post /api/v1/sources">client.sources.<a href="./src/resources/sources.ts">ingest</a>({ ...params }) -> IngestAccepted</code>
@@ -61,7 +60,7 @@ Types:
 
 Methods:
 
-- <code title="get /api/v1/entities">client.entities.<a href="./src/resources/entities.ts">list</a>({ ...params }) -> EntityList</code>
+- <code title="get /api/v1/entities">client.entities.<a href="./src/resources/entities.ts">list</a>({ ...params }) -> EntitiesEntitiesOffsetPage</code>
 - <code title="get /api/v1/entities/{entity_uuid}">client.entities.<a href="./src/resources/entities.ts">get</a>(entityUuid, { ...params }) -> EntityDetail</code>
 
 # Conversations
@@ -78,20 +77,19 @@ Methods:
 
 Types:
 
-- <code><a href="./src/resources/jobs.ts">JobGetStatusResponse</a></code>
+- <code><a href="./src/resources/jobs.ts">Job</a></code>
 
 Methods:
 
-- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">getStatus</a>(jobID) -> JobGetStatusResponse</code>
+- <code title="get /api/v1/jobs/{job_id}">client.jobs.<a href="./src/resources/jobs.ts">getStatus</a>(jobID) -> Job</code>
 
 # Usage
 
 Types:
 
 - <code><a href="./src/resources/usage.ts">Usage</a></code>
+- <code><a href="./src/resources/usage.ts">UsageMetric</a></code>
 
 Methods:
 
 - <code title="get /api/v1/usage">client.usage.<a href="./src/resources/usage.ts">get</a>({ ...params }) -> Usage</code>
-
-# Health

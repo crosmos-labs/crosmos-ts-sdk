@@ -20,41 +20,23 @@ export interface Usage {
 
   plan: 'free' | 'developer' | 'pro' | 'enterprise';
 
-  queries: Usage.Queries;
+  queries: UsageMetric;
 
   rate_limit_per_day: number;
 
   rate_limit_rpm: number;
 
-  spaces: Usage.Spaces;
+  spaces: UsageMetric;
 
-  tokens: Usage.Tokens;
+  tokens: UsageMetric;
 }
 
-export namespace Usage {
-  export interface Queries {
-    limit: number;
+export interface UsageMetric {
+  limit: number;
 
-    remaining: number;
+  remaining: number;
 
-    used: number;
-  }
-
-  export interface Spaces {
-    limit: number;
-
-    remaining: number;
-
-    used: number;
-  }
-
-  export interface Tokens {
-    limit: number;
-
-    remaining: number;
-
-    used: number;
-  }
+  used: number;
 }
 
 export interface UsageGetParams {
@@ -64,5 +46,5 @@ export interface UsageGetParams {
 }
 
 export declare namespace UsageResource {
-  export { type Usage as Usage, type UsageGetParams as UsageGetParams };
+  export { type Usage as Usage, type UsageMetric as UsageMetric, type UsageGetParams as UsageGetParams };
 }

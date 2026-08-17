@@ -9,12 +9,12 @@ export class Jobs extends APIResource {
   /**
    * Get Job
    */
-  getStatus(jobID: string, options?: RequestOptions): APIPromise<JobGetStatusResponse> {
+  getStatus(jobID: string, options?: RequestOptions): APIPromise<Job> {
     return this._client.get(path`/api/v1/jobs/${jobID}`, options);
   }
 }
 
-export interface JobGetStatusResponse {
+export interface Job {
   completed_at: string | null;
 
   created_at: string;
@@ -23,7 +23,7 @@ export interface JobGetStatusResponse {
 
   job_id: string;
 
-  result: JobGetStatusResponse.Result | null;
+  result: Job.Result | null;
 
   source_ids: Array<number>;
 
@@ -32,7 +32,7 @@ export interface JobGetStatusResponse {
   status: 'pending' | 'processing' | 'completed' | 'partial' | 'failed' | 'cancelled';
 }
 
-export namespace JobGetStatusResponse {
+export namespace Job {
   export interface Result {
     edge_count: number;
 
@@ -53,5 +53,5 @@ export namespace JobGetStatusResponse {
 }
 
 export declare namespace Jobs {
-  export { type JobGetStatusResponse as JobGetStatusResponse };
+  export { type Job as Job };
 }

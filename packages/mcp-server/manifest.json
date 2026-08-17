@@ -29,7 +29,7 @@
   "user_config": {
     "CROSMOS_API_KEY": {
       "title": "api_key",
-      "description": "JWT access token or API key (csk_…)",
+      "description": "JWT access token or API key (csk_...)",
       "required": true,
       "type": "string"
     }
