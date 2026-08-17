@@ -2,6 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
+import { PagePromise, SourcesOffsetPage, type SourcesOffsetPageParams } from '../core/pagination';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -10,8 +11,14 @@ export class Sources extends APIResource {
   /**
    * List Sources
    */
-  list(query: SourceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<SourceList> {
-    return this._client.get('/api/v1/sources', { query, ...options });
+  list(
+    query: SourceListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<SourceListSourcesSourcesOffsetPage, SourceList.Source> {
+    return this._client.getAPIList('/api/v1/sources', SourcesOffsetPage<SourceList.Source>, {
+      query,
+      ...options,
+    });
   }
 
   /**
@@ -49,6 +56,8 @@ export class Sources extends APIResource {
     return this._client.post('/api/v1/sources', { body, ...options });
   }
 }
+
+export type SourceListSourcesSourcesOffsetPage = SourcesOffsetPage<SourceList.Source>;
 
 export interface IngestAccepted {
   job_id: string;
@@ -121,14 +130,10 @@ export namespace SourceList {
   }
 }
 
-export interface SourceListParams {
+export interface SourceListParams extends SourcesOffsetPageParams {
   content_type?: string;
 
   extraction_status?: 'pending' | 'processing' | 'completed' | 'failed';
-
-  limit?: number;
-
-  offset?: number | null;
 
   space_id?: string;
 
@@ -184,6 +189,7 @@ export declare namespace Sources {
     type IngestAccepted as IngestAccepted,
     type Source as Source,
     type SourceList as SourceList,
+    type SourceListSourcesSourcesOffsetPage as SourceListSourcesSourcesOffsetPage,
     type SourceListParams as SourceListParams,
     type SourceDeleteParams as SourceDeleteParams,
     type SourceGetParams as SourceGetParams,

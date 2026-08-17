@@ -2,6 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
+import { PagePromise, SpacesOffsetPage, type SpacesOffsetPageParams } from '../core/pagination';
 import { buildHeaders } from '../internal/headers';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
@@ -10,7 +11,7 @@ export class Spaces extends APIResource {
   /**
    * Create memory space
    */
-  create(body: SpaceCreateParams, options?: RequestOptions): APIPromise<SpaceCreateResponse> {
+  create(body: SpaceCreateParams, options?: RequestOptions): APIPromise<Space> {
     return this._client.post('/api/v1/spaces', { body, ...options });
   }
 
@@ -18,8 +19,11 @@ export class Spaces extends APIResource {
    * Pass ?name= to resolve a space by its name (returns 0 or 1 since names are
    * unique per org).
    */
-  list(query: SpaceListParams | null | undefined = {}, options?: RequestOptions): APIPromise<SpaceList> {
-    return this._client.get('/api/v1/spaces', { query, ...options });
+  list(
+    query: SpaceListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<SpacesSpacesOffsetPage, Space> {
+    return this._client.getAPIList('/api/v1/spaces', SpacesOffsetPage<Space>, { query, ...options });
   }
 
   /**
@@ -35,65 +39,33 @@ export class Spaces extends APIResource {
   /**
    * Get memory space
    */
-  get(spaceUuid: string, options?: RequestOptions): APIPromise<SpaceGetResponse> {
+  get(spaceUuid: string, options?: RequestOptions): APIPromise<Space> {
     return this._client.get(path`/api/v1/spaces/${spaceUuid}`, options);
   }
 }
 
+export type SpacesSpacesOffsetPage = SpacesOffsetPage<Space>;
+
+export interface Space {
+  id: string;
+
+  created_at: string;
+
+  description: string | null;
+
+  meta: { [key: string]: unknown } | null;
+
+  name: string;
+
+  org_id: string;
+
+  updated_at: string;
+}
+
 export interface SpaceList {
-  spaces: Array<SpaceList.Space>;
+  spaces: Array<Space>;
 
   total: number;
-}
-
-export namespace SpaceList {
-  export interface Space {
-    id: string;
-
-    created_at: string;
-
-    description: string | null;
-
-    meta: { [key: string]: unknown } | null;
-
-    name: string;
-
-    org_id: string;
-
-    updated_at: string;
-  }
-}
-
-export interface SpaceCreateResponse {
-  id: string;
-
-  created_at: string;
-
-  description: string | null;
-
-  meta: { [key: string]: unknown } | null;
-
-  name: string;
-
-  org_id: string;
-
-  updated_at: string;
-}
-
-export interface SpaceGetResponse {
-  id: string;
-
-  created_at: string;
-
-  description: string | null;
-
-  meta: { [key: string]: unknown } | null;
-
-  name: string;
-
-  org_id: string;
-
-  updated_at: string;
 }
 
 export interface SpaceCreateParams {
@@ -104,19 +76,15 @@ export interface SpaceCreateParams {
   meta?: { [key: string]: unknown } | null;
 }
 
-export interface SpaceListParams {
-  limit?: number;
-
+export interface SpaceListParams extends SpacesOffsetPageParams {
   name?: string;
-
-  offset?: number | null;
 }
 
 export declare namespace Spaces {
   export {
+    type Space as Space,
     type SpaceList as SpaceList,
-    type SpaceCreateResponse as SpaceCreateResponse,
-    type SpaceGetResponse as SpaceGetResponse,
+    type SpacesSpacesOffsetPage as SpacesSpacesOffsetPage,
     type SpaceCreateParams as SpaceCreateParams,
     type SpaceListParams as SpaceListParams,
   };

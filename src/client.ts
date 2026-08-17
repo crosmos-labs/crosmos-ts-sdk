@@ -14,20 +14,30 @@ import * as Opts from './internal/request-options';
 import { stringifyQuery } from './internal/utils/query';
 import { VERSION } from './version';
 import * as Errors from './core/error';
+import * as Pagination from './core/pagination';
+import {
+  AbstractPage,
+  type EntitiesOffsetPageParams,
+  EntitiesOffsetPageResponse,
+  type SourcesOffsetPageParams,
+  SourcesOffsetPageResponse,
+  type SpacesOffsetPageParams,
+  SpacesOffsetPageResponse,
+} from './core/pagination';
 import * as Uploads from './core/uploads';
 import * as API from './resources/index';
 import { APIPromise } from './core/api-promise';
 import { ConversationIngestParams, Conversations, IngestConversation } from './resources/conversations';
 import {
   Entities,
+  EntitiesEntitiesOffsetPage,
   Entity,
   EntityDetail,
   EntityGetParams,
   EntityList,
   EntityListParams,
 } from './resources/entities';
-import { Health } from './resources/health';
-import { JobGetStatusResponse, Jobs } from './resources/jobs';
+import { Job, Jobs } from './resources/jobs';
 import {
   Memories,
   Memory,
@@ -45,17 +55,18 @@ import {
   SourceIngestParams,
   SourceList,
   SourceListParams,
+  SourceListSourcesSourcesOffsetPage,
   Sources,
 } from './resources/sources';
 import {
+  Space,
   SpaceCreateParams,
-  SpaceCreateResponse,
-  SpaceGetResponse,
   SpaceList,
   SpaceListParams,
   Spaces,
+  SpacesSpacesOffsetPage,
 } from './resources/spaces';
-import { Usage, UsageGetParams, UsageResource } from './resources/usage';
+import { Usage, UsageGetParams, UsageMetric, UsageResource } from './resources/usage';
 import { type Fetch } from './internal/builtin-types';
 import { HeadersLike, NullableHeaders, buildHeaders } from './internal/headers';
 import { FinalRequestOptions, RequestOptions } from './internal/request-options';
@@ -71,7 +82,7 @@ import { isEmptyObj } from './internal/utils/values';
 
 export interface ClientOptions {
   /**
-   * JWT access token or API key (csk_…)
+   * JWT access token or API key (csk_...)
    */
   apiKey?: string | undefined;
 
@@ -255,6 +266,10 @@ export class Crosmos {
 
   protected validateHeaders({ values, nulls }: NullableHeaders) {
     return;
+  }
+
+  protected async authHeaders(opts: FinalRequestOptions): Promise<NullableHeaders | undefined> {
+    return buildHeaders([{ Authorization: `Bearer ${this.apiKey}` }]);
   }
 
   /**
@@ -517,6 +532,30 @@ export class Crosmos {
     return { response, options, controller, requestLogID, retryOfRequestLogID, startTime };
   }
 
+  getAPIList<Item, PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>>(
+    path: string,
+    Page: new (...args: any[]) => PageClass,
+    opts?: PromiseOrValue<RequestOptions>,
+  ): Pagination.PagePromise<PageClass, Item> {
+    return this.requestAPIList(
+      Page,
+      opts && 'then' in opts ?
+        opts.then((opts) => ({ method: 'get', path, ...opts }))
+      : { method: 'get', path, ...opts },
+    );
+  }
+
+  requestAPIList<
+    Item = unknown,
+    PageClass extends Pagination.AbstractPage<Item> = Pagination.AbstractPage<Item>,
+  >(
+    Page: new (...args: ConstructorParameters<typeof Pagination.AbstractPage>) => PageClass,
+    options: PromiseOrValue<FinalRequestOptions>,
+  ): Pagination.PagePromise<PageClass, Item> {
+    const request = this.makeRequest(options, null, undefined);
+    return new Pagination.PagePromise<PageClass, Item>(this as any as Crosmos, request, Page);
+  }
+
   async fetchWithTimeout(
     url: RequestInfo,
     init: RequestInit | undefined,
@@ -683,6 +722,7 @@ export class Crosmos {
         ...(options.timeout ? { 'X-Stainless-Timeout': String(Math.trunc(options.timeout / 1000)) } : {}),
         ...getPlatformHeaders(),
       },
+      await this.authHeaders(options),
       this._options.defaultHeaders,
       bodyHeaders,
       options.headers,
@@ -779,7 +819,6 @@ export class Crosmos {
   conversations: API.Conversations = new API.Conversations(this);
   jobs: API.Jobs = new API.Jobs(this);
   usage: API.UsageResource = new API.UsageResource(this);
-  health: API.Health = new API.Health(this);
 }
 
 Crosmos.Spaces = Spaces;
@@ -790,16 +829,33 @@ Crosmos.Entities = Entities;
 Crosmos.Conversations = Conversations;
 Crosmos.Jobs = Jobs;
 Crosmos.UsageResource = UsageResource;
-Crosmos.Health = Health;
 
 export declare namespace Crosmos {
   export type RequestOptions = Opts.RequestOptions;
 
+  export import SpacesOffsetPage = Pagination.SpacesOffsetPage;
+  export {
+    type SpacesOffsetPageParams as SpacesOffsetPageParams,
+    type SpacesOffsetPageResponse as SpacesOffsetPageResponse,
+  };
+
+  export import SourcesOffsetPage = Pagination.SourcesOffsetPage;
+  export {
+    type SourcesOffsetPageParams as SourcesOffsetPageParams,
+    type SourcesOffsetPageResponse as SourcesOffsetPageResponse,
+  };
+
+  export import EntitiesOffsetPage = Pagination.EntitiesOffsetPage;
+  export {
+    type EntitiesOffsetPageParams as EntitiesOffsetPageParams,
+    type EntitiesOffsetPageResponse as EntitiesOffsetPageResponse,
+  };
+
   export {
     Spaces as Spaces,
+    type Space as Space,
     type SpaceList as SpaceList,
-    type SpaceCreateResponse as SpaceCreateResponse,
-    type SpaceGetResponse as SpaceGetResponse,
+    type SpacesSpacesOffsetPage as SpacesSpacesOffsetPage,
     type SpaceCreateParams as SpaceCreateParams,
     type SpaceListParams as SpaceListParams,
   };
@@ -815,6 +871,7 @@ export declare namespace Crosmos {
     type IngestAccepted as IngestAccepted,
     type Source as Source,
     type SourceList as SourceList,
+    type SourceListSourcesSourcesOffsetPage as SourceListSourcesSourcesOffsetPage,
     type SourceListParams as SourceListParams,
     type SourceDeleteParams as SourceDeleteParams,
     type SourceGetParams as SourceGetParams,
@@ -835,6 +892,7 @@ export declare namespace Crosmos {
     type Entity as Entity,
     type EntityDetail as EntityDetail,
     type EntityList as EntityList,
+    type EntitiesEntitiesOffsetPage as EntitiesEntitiesOffsetPage,
     type EntityListParams as EntityListParams,
     type EntityGetParams as EntityGetParams,
   };
@@ -845,9 +903,12 @@ export declare namespace Crosmos {
     type ConversationIngestParams as ConversationIngestParams,
   };
 
-  export { Jobs as Jobs, type JobGetStatusResponse as JobGetStatusResponse };
+  export { Jobs as Jobs, type Job as Job };
 
-  export { UsageResource as UsageResource, type Usage as Usage, type UsageGetParams as UsageGetParams };
-
-  export { Health as Health };
+  export {
+    UsageResource as UsageResource,
+    type Usage as Usage,
+    type UsageMetric as UsageMetric,
+    type UsageGetParams as UsageGetParams,
+  };
 }
