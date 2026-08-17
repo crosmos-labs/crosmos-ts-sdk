@@ -31,7 +31,9 @@ The full API of this library can be found in [api.md](api.md).
 ```js
 import Crosmos from 'crosmos';
 
-const client = new Crosmos();
+const client = new Crosmos({
+  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
+});
 
 const search = await client.search.hybrid({
   query: 'What is my primary language?',
@@ -49,7 +51,9 @@ This library includes TypeScript definitions for all request params and response
 ```ts
 import Crosmos from 'crosmos';
 
-const client = new Crosmos();
+const client = new Crosmos({
+  apiKey: process.env['CROSMOS_API_KEY'], // This is the default and can be omitted
+});
 
 const params: Crosmos.SearchHybridParams = {
   query: 'What is my primary language?',
@@ -106,7 +110,6 @@ You can use the `maxRetries` option to configure or disable this:
 ```js
 // Configure the default for all requests:
 const client = new Crosmos({
-  apiKey: 'My API Key',
   maxRetries: 0, // default is 2
 });
 
@@ -124,7 +127,6 @@ Requests time out after 1 minute by default. You can configure this with a `time
 ```ts
 // Configure the default for all requests:
 const client = new Crosmos({
-  apiKey: 'My API Key',
   timeout: 20 * 1000, // 20 seconds (default is 1 minute)
 });
 
@@ -137,6 +139,37 @@ await client.search.hybrid({ query: 'What is my primary language?', space_id: '<
 On timeout, an `APIConnectionTimeoutError` is thrown.
 
 Note that requests which time out will be [retried twice by default](#retries).
+
+## Auto-pagination
+
+List methods in the Crosmos API are paginated.
+You can use the `for await … of` syntax to iterate through items across all pages:
+
+```ts
+async function fetchAllSpaces(params) {
+  const allSpaces = [];
+  // Automatically fetches more pages as needed.
+  for await (const space of client.spaces.list()) {
+    allSpaces.push(space);
+  }
+  return allSpaces;
+}
+```
+
+Alternatively, you can request a single page at a time:
+
+```ts
+let page = await client.spaces.list();
+for (const space of page.spaces) {
+  console.log(space);
+}
+
+// Convenience methods are provided for manually paginating:
+while (page.hasNextPage()) {
+  page = await page.getNextPage();
+  // ...
+}
+```
 
 ## Advanced Usage
 

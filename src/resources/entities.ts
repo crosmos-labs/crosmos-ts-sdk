@@ -2,6 +2,7 @@
 
 import { APIResource } from '../core/resource';
 import { APIPromise } from '../core/api-promise';
+import { EntitiesOffsetPage, type EntitiesOffsetPageParams, PagePromise } from '../core/pagination';
 import { RequestOptions } from '../internal/request-options';
 import { path } from '../internal/utils/path';
 
@@ -9,8 +10,11 @@ export class Entities extends APIResource {
   /**
    * List entities
    */
-  list(query: EntityListParams | null | undefined = {}, options?: RequestOptions): APIPromise<EntityList> {
-    return this._client.get('/api/v1/entities', { query, ...options });
+  list(
+    query: EntityListParams | null | undefined = {},
+    options?: RequestOptions,
+  ): PagePromise<EntitiesEntitiesOffsetPage, Entity> {
+    return this._client.getAPIList('/api/v1/entities', EntitiesOffsetPage<Entity>, { query, ...options });
   }
 
   /**
@@ -24,6 +28,8 @@ export class Entities extends APIResource {
     return this._client.get(path`/api/v1/entities/${entityUuid}`, { query, ...options });
   }
 }
+
+export type EntitiesEntitiesOffsetPage = EntitiesOffsetPage<Entity>;
 
 export interface Entity {
   id: string;
@@ -63,12 +69,8 @@ export interface EntityList {
   total: number;
 }
 
-export interface EntityListParams {
+export interface EntityListParams extends EntitiesOffsetPageParams {
   entity_type?: string;
-
-  limit?: number;
-
-  offset?: number | null;
 
   order?: 'asc' | 'desc';
 
@@ -92,6 +94,7 @@ export declare namespace Entities {
     type Entity as Entity,
     type EntityDetail as EntityDetail,
     type EntityList as EntityList,
+    type EntitiesEntitiesOffsetPage as EntitiesEntitiesOffsetPage,
     type EntityListParams as EntityListParams,
     type EntityGetParams as EntityGetParams,
   };

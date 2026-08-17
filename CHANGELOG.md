@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.3.0 (2026-08-17)
+
+Full Changelog: [v0.2.0...v0.3.0](https://github.com/crosmos-labs/crosmos-ts-sdk/compare/v0.2.0...v0.3.0)
+
+### Features
+
+* **api:** api update ([d126db9](https://github.com/crosmos-labs/crosmos-ts-sdk/commit/d126db973b3f47a4c51304dc9fda8bc02108b1fc))
+* **api:** manual updates ([882a153](https://github.com/crosmos-labs/crosmos-ts-sdk/commit/882a153f41ba0cd887af601e737581ded915bd2d))
+
+
+### Chores
+
+* update SDK settings ([8abf176](https://github.com/crosmos-labs/crosmos-ts-sdk/commit/8abf1764d956f80a77f601aa0611b7b51c105fa9))
+
 ## 0.2.0 (2026-07-18)
 
 Full Changelog: [v0.1.0...v0.2.0](https://github.com/crosmos-labs/crosmos-ts-sdk/compare/v0.1.0...v0.2.0)
