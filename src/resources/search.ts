@@ -37,6 +37,8 @@ export namespace Search {
 
     score: number;
 
+    source_id: string | null;
+
     source?: string | null;
   }
 }
