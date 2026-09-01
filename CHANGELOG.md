@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.4.0 (2026-09-01)
+
+Full Changelog: [v0.3.2...v0.4.0](https://github.com/crosmos-labs/crosmos-ts-sdk/compare/v0.3.2...v0.4.0)
+
+### Features
+
+* **api:** api update ([b48a9e1](https://github.com/crosmos-labs/crosmos-ts-sdk/commit/b48a9e11869b741754b226ec00eed5a76f9b3c2b))
+
+
+### Documentation
+
+* **mcp:** document code execution modes and the local code runner ([994200d](https://github.com/crosmos-labs/crosmos-ts-sdk/commit/994200d11f25ae449b8da5aabbceb78a29eaa20e))
+
 ## 0.3.2 (2026-08-17)
 
 Full Changelog: [v0.3.1...v0.3.2](https://github.com/crosmos-labs/crosmos-ts-sdk/compare/v0.3.1...v0.3.2)
